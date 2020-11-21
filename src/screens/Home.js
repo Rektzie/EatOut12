@@ -8,6 +8,8 @@ import Constants from "expo-constants"
 import firebase from 'firebase'
 
 
+
+
 const onSignOutButtonPressed = () => {
     // firebase.auth().signOut().then(function () {
     // Sign-out successful.

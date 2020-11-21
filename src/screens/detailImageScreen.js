@@ -1,8 +1,15 @@
 import React from "react"
-import { View, Image, StyleSheet, Text, TextInput, Button } from 'react-native';
+import { View, Image, StyleSheet, Text, TextInput, Button, Platform, Alert} from 'react-native';
 import { useEffect, useState } from 'react';
+import firebase from 'firebase'
+// import storage from '@react-native-firebase/storage';
+
+// const { imageName, uploadUri } = this.state;
+
 
 const DetailImageScreen = (props) => {
+    // const [ imageName, setImageName ] = useState('')
+    // const [ uploadUri, setUploadUri ] = useState('')
     const img = props.navigation.getParam("img")
     // const gettitle = props.navigation.getParam("title")
     // const getdetail = props.navigation.getParam("detail")
@@ -11,24 +18,41 @@ const DetailImageScreen = (props) => {
     // const [savedTitle, setSavedTitle] = useState("")
     // const [savedDetail, setSavedDetail] = useState("")
 
-
+    
     const [title, setTitle] = useState("")
     const [detail, setDetail] = useState("")
+    const [image, setImage] = useState("");
+    const [uploading, setUploading] = useState(false);
+    const [transferred, setTransferred] = useState(0);
 
-    const onSaveButtonPressed = () => {
-        const { imageName, uploadUri } = this.state;
-        firebase
-            .storage()
-            .ref(imageName)
-            .putFile(uploadUri)
-            .then((snapshot) => {
-                //You can check the image is now uploaded in the storage bucket
-                console.log(`${imageName} has been successfully uploaded.`);
-            })
-            .catch((e) => console.log('uploading image error => ', e));
-    }
+    const uploadImage = async () => {
+        // setImage(img)
+        const uri = img;
+        const filename = uri;
+        const uploadUri = uri;
+        setUploading(true);
+        setTransferred(0);
+        const task = firebase.storage()
+            .ref(filename)
+            .putString(uploadUri);
+        // set progress state
+        task.on('state_changed', snapshot => {
+            setTransferred(
+                Math.round(snapshot.bytesTransferred / snapshot.totalBytes) * 10000
+            );
+        });
+        try {
+            await task();
+        } catch (e) {
+            console.error(e);
+        }
+        setUploading(false);
+        Alert.alert(
+            'Photo uploaded!',
+            'Your photo has been uploaded to Firebase Cloud Storage!'
+        );
+    };
 
-    console.log(img)
     return (
         <View style={styles.container}>
             <Image
@@ -52,7 +76,7 @@ const DetailImageScreen = (props) => {
             <Button
                 title="save"
                 style={styles.text}
-                onPress={() => { props.navigation.popToTop({ title: title, detail: detail }) }}
+                onPress={() => { uploadImage(); props.navigation.popToTop({ title: title, detail: detail }) }}
             />
         </View>
     )
