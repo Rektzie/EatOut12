@@ -1,14 +1,64 @@
-import React, { useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Animated, StyleSheet, Text, View, Image } from "react-native";
 import { ScrollView, TextInput, TouchableOpacity } from "react-native-gesture-handler";
 import { MaterialIcons } from '@expo/vector-icons';
+import firebase from 'firebase'
 const ProfileScreen = () => {
+  const [userData, setUserData] = useState({
+    key: "",
+    name: "",
+    email: "",
+    age: "",
+    height: "",
+    weidth: "",
+    bmi: ""
+
+  })
+  const auth = firebase.auth()
+  const [uid, setUid] = useState(auth.currentUser.uid)
+  useEffect(() => {
+    console.log('hihi')
+    
+    
+
+    const dbRef = firebase.firestore().collection('users').doc(uid)
+    dbRef.get().then((res) => {
+      if (res.exists) {
+        const user = res.data();
+        setUserData(
+          {
+            key: res.id,
+            name: user.fullname,
+            email: user.email,
+            age: user.age,
+            height: user.height,
+            weidth: user.weidth,
+            bmi: user.bmi
+          }
+
+
+        )
+      } else {
+        console.log("Document does not exist!");
+      }
+    });
+  }, [])
+  // }
+
+  // const updateDBRef = firebase.firestore().collection('users').doc(uid);
+  // updateDBRef.set({
+  //   height: 157,
+  // })
+
 
   return (
+
     <View style={{ flex: 1 }}>
 
-
-      <View style={{ justifyContent: "center", alignItems: "center", flex: 1}}>
+      <Text>{userData.email}</Text>
+      <Text>{userData.key}</Text>
+      {/* <Text>{height}</Text> */}
+      <View style={{ justifyContent: "center", alignItems: "center", flex: 1 }}>
 
         <Image style={{ width: 150, height: 150, }}
 

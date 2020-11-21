@@ -28,6 +28,10 @@ export default function RegistrationScreen({ navigation }) {
                     id: uid,
                     email,
                     fullName,
+                    age : "",
+                    BMI : "",
+                    weight : "",
+                    height : ""
                 };
                 const usersRef = firebase.firestore().collection('users')
                 usersRef
