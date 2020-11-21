@@ -1,0 +1,15 @@
+{
+  "name": "EatOut12",
+  "displayName": "EatOut12",
+  "expo": {
+    "name": "EatOut12",
+    "slug": "EatOut12",
+    "version": "1.0.0",
+    "assetBundlePatterns": [
+      "**/*"
+    ]
+  }
+}
+
+
+

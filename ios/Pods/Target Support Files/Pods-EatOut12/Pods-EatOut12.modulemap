@@ -1,0 +1,6 @@
+module Pods_EatOut12 {
+  umbrella header "Pods-EatOut12-umbrella.h"
+
+  export *
+  module * { export * }
+}
