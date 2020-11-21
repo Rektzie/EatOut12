@@ -69,7 +69,7 @@ const Home = (props) => {
 
     return (
         <View style={{ flex: 2 }}>
-            <TouchableOpacity onPress={onSignOutButtonPressed} ><Text>Logout</Text></TouchableOpacity>
+            
 
             <View style={{ flex: 1 }}>
                 {/* <View style={{ flexDirection: 'row' }}>
@@ -83,6 +83,7 @@ const Home = (props) => {
             </View>
 
             <Text> {title} </Text>
+            <TouchableOpacity onPress={onSignOutButtonPressed} ><Text>Logout</Text></TouchableOpacity>
 
             <View style={styles.layout}>
                 <Text>
