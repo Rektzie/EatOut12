@@ -7,7 +7,7 @@ import { AntDesign } from "@expo/vector-icons";
 import React from "react";
 import { createStackNavigator } from "react-navigation-stack"
 import DetailImageScreen from "../screens/detailImageScreen"
-
+import Profile from "../screens/profile"
 
 
 const Stack = createStackNavigator ({
@@ -48,6 +48,14 @@ const TabNavigator = createBottomTabNavigator({
   },
   Chat: {
     screen: Chat,
+    navigationOptions: {
+      tabBarIcon: () => {
+        return <AntDesign name="swap" size={24} color={"black"} />;
+      },
+    },
+  },
+  Profile: {
+    screen: Profile,
     navigationOptions: {
       tabBarIcon: () => {
         return <AntDesign name="swap" size={24} color={"black"} />;
