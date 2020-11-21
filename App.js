@@ -13,6 +13,7 @@ import { createStore, combineReducers } from 'redux'
 import UserReducer from './src/store/reducer/user.reducer'
 import RootNav from "./src/navigation/RootNav"
 
+// hihi its mona
 if (!global.btoa) { global.btoa = encode }
 if (!global.atob) { global.atob = decode }
 
