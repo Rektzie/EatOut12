@@ -14,7 +14,8 @@ const Post = () => {
  
   return (
     <View style={styles.layout}>
-      {uid}
+      
+      <Text>{uid}</Text>
     </View>
    
   );

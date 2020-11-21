@@ -1,39 +1,37 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Animated, StyleSheet, Text, View, Image } from "react-native";
+import { Animated, StyleSheet, Text, View, Image, Button } from "react-native";
 import { ScrollView, TextInput, TouchableOpacity } from "react-native-gesture-handler";
 import { MaterialIcons } from '@expo/vector-icons';
 import firebase from 'firebase'
-const ProfileScreen = () => {
+const ProfileScreen = (props) => {
   const [userData, setUserData] = useState({
-    key: "",
-    name: "",
+
     email: "",
+    fullName: "",
     age: "",
+    BMI: "",
+    weight: "",
     height: "",
-    weidth: "",
-    bmi: ""
 
   })
   const auth = firebase.auth()
   const [uid, setUid] = useState(auth.currentUser.uid)
   useEffect(() => {
-    console.log('hihi')
-
-
-
     const dbRef = firebase.firestore().collection('users').doc(uid)
     dbRef.get().then((res) => {
       if (res.exists) {
         const user = res.data();
         setUserData(
           {
-            key: res.id,
-            name: user.fullname,
+
             email: user.email,
+            fullName: user.fullName,
             age: user.age,
+            BMI: user.BMI,
+            weight: user.weight,
             height: user.height,
-            weidth: user.weidth,
-            bmi: user.bmi
+
+
           }
 
 
@@ -55,8 +53,7 @@ const ProfileScreen = () => {
 
     <View style={{ flex: 1 }}>
       <View style={styles.containerprofileimageandedit}>
-        <Text>{userData.email}</Text>
-        <Text>{userData.key}</Text>
+
         {/* <Text>{height}</Text> */}
 
 
@@ -69,19 +66,23 @@ const ProfileScreen = () => {
         />
         <View style={{ flexDirection: "row" }}>
           <MaterialIcons name="edit" size={25} color="gray" style={{ marginRight: 5 }} />
-          <Text style={styles.texteidtprofile}>Edit Profile</Text>
+          <Button
+            title="Edit Profile"
+            onPress={() => props.navigation.navigate("EditProfile")}></Button>
+          {/* <Text style={styles.texteidtprofile}>Edit Profile</Text> */}
 
         </View>
       </View>
       <View style={{ flex: 1 }}>
         <View style={{ flexDirection: "row", marginTop: 10, }}>
           <Text style={styles.nameandemail}>Name</Text>
-          <TextInput paddingLeft={20} style={styles.inputnameandemail}></TextInput>
+          <Text paddingLeft={20} style={styles.nameandemail}>{userData.fullName}</Text>
         </View>
 
         <View style={{ flexDirection: "row", marginTop: 15 }}>
           <Text style={styles.nameandemail}>Email</Text>
-          <TextInput paddingLeft={20} style={styles.inputnameandemail}></TextInput>
+          <Text paddingLeft={20} style={styles.nameandemail}>{userData.email}</Text>
+
         </View>
 
         <View style={styles.line} />
@@ -89,27 +90,27 @@ const ProfileScreen = () => {
 
         <View style={{ flexDirection: "row" }}>
           <Text style={styles.age}>Age</Text>
-          <TextInput paddingLeft={20} style={styles.inputage}></TextInput>
+          <Text paddingLeft={20} style={styles.age}>{userData.age}</Text>
           <View style={{ flexDirection: "row" }}>
             <Text style={styles.bmi}>BMI</Text>
-            <TextInput paddingLeft={20} style={styles.inputage}></TextInput>
+            <Text paddingLeft={20} style={styles.age}>{userData.BMI}</Text>
           </View>
         </View>
 
         <View style={{ flexDirection: "row" }}>
           <Text style={styles.weight}>Weight</Text>
-          <TextInput paddingLeft={20} style={styles.inputweight}></TextInput>
+          <Text paddingLeft={20} style={styles.weight}>{userData.weight}</Text>
 
           <Text style={styles.height}>Height</Text>
-          <TextInput paddingLeft={20} style={styles.inputheight}></TextInput>
+          <Text paddingLeft={20} style={styles.height}>{userData.height}</Text>
         </View>
 
         <View style={styles.line} />
 
-        <View style={{ flexDirection: "row" }}>
+        {/* <View style={{ flexDirection: "row" }}>
           <Text style={styles.goal}>Goal Reached Streak</Text>
-          <TextInput editable={false} selectTextOnFocus={false} onEndEditing={false} paddingLeft={20} style={styles.inputgoal}><Text>5สมมติเลข</Text></TextInput>
-        </View>
+          <Text editable={false} selectTextOnFocus={false} onEndEditing={false} paddingLeft={20} style={styles.inputgoal}><Text>5สมมติเลข</Text></Text>
+        </View> */}
       </View>
 
       <View style={{ flex: 1 }}>
@@ -227,14 +228,14 @@ const styles = StyleSheet.create({
     borderColor: "#3186FF",
     borderRadius: 20
   },
-  goal: {
-    marginTop: 23,
-    marginLeft: 20,
-    fontWeight: "bold",
-    color: "#707070",
-    fontSize: 18,
-    fontFamily: 'Athiti'
-  },
+  // goal: {
+  //   marginTop: 23,
+  //   marginLeft: 20,
+  //   fontWeight: "bold",
+  //   color: "#707070",
+  //   fontSize: 18,
+  //   fontFamily: 'Athiti'
+  // },
   inputgoal: {
     marginTop: 20,
     marginLeft: 32,
