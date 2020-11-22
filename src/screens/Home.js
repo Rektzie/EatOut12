@@ -81,69 +81,83 @@ const Home = (props) => {
 
    
     return (
-        <View style={{ flex: 3 }}>
+        <View style={{ flex: 2 }}>
+            
 
-
-            <View style={{ flex: 1 }}>
-               
-                {/* <View style={{ flexDirection: 'row', marginTop: 50 }}>
-                    <CaloriesBurned />
-
-                </View> */}
+            <View style={{ flex: 2 }}>
+                {/* <View style={{ flexDirection: 'row' }}>
+                <CaloriesBurned />
+                <Streak />
+            </View>
+            <View style={{ flexDirection: 'row' }}>
+                <CaloriesBurned />
+                <Streak />
+            </View> */}
             </View>
 
-            {/* <Text> {getCal} </Text> */}
-            <TouchableOpacity onPress={onSignOutButtonPressed} ><Text>Logout</Text></TouchableOpacity>
-
+        
+            {/* <View style={styles.containerate}>
+          <Text style={styles.breakfast}>Breakfast</Text>
+          <Text style={styles.lunch}>Lunch</Text>
+          <Text style={styles.dinner}>Dinner</Text>
+        </View> */} 
+        <View style={{flexDirection:"column", backgroundColor:"#D3C894"}}>  
+            <View style={{flexDirection:"row", justifyContent:"space-around", marginTop:8, marginBottom:10, backgroundColor:"#D3C894"}}>  
+                <Text style={styles.breakfast}>Breakfast</Text>
+                <Text style={styles.lunch}>Lunch</Text>
+                <Text style={styles.dinner}>Dinner</Text>
+            </View>
+        </View>
             <View style={styles.layout}>
+                           
+                    
 
+                 <Text>
+                    {title}
+                </Text>
+                <Text>
+                    {detail}
+                </Text> 
 
-                <View style={styles.imgSet}>
+                <View style={styles.imgSet} >
+                    <TouchableOpacity onPress={() => pickImage(1)}>
                     <Image
                         style={styles.img}
                         source={image1 ? { uri: image1 } : require('../../assets/photo.png')} />
-                    <Button
-                        title="add"
-                        onPress={() => pickImage(1)}
-                    />
 
-                    <Button
-                        title="detail"
-                        onPress={() => props.navigation.navigate("DetailImage", { title: title, detail: detail })}
-                    />
+
+                        <TouchableOpacity style={styles.adddetail}onPress={() => props.navigation.navigate("DetailImage", { title: title, detail: detail })}>
+                            <Text>Add Detail</Text>
+                        </TouchableOpacity>
+                    </TouchableOpacity>
                 </View>
                 <View style={styles.imgSet}>
+                    <TouchableOpacity onPress={() => pickImage(2)}>
                     <Image
                         style={styles.img}
                         source={image2 ? { uri: image2 } : require('../../assets/photo.png')} />
-                    <Button
-                        title="add"
-                        onPress={() => pickImage(2)}
-                    />
-                    <Button
-                        title="detail"
-                        onPress={() => props.navigation.navigate("DetailImage", { title: title, detail: detail })}
-                    />
+                        <TouchableOpacity style={styles.adddetail}onPress={() => props.navigation.navigate("DetailImage", { title: title, detail: detail })}>
+                            <Text>Add Detail</Text>
+                        </TouchableOpacity>
+                    </TouchableOpacity>
                 </View>
                 <View style={styles.imgSet}>
+                    <TouchableOpacity onPress={() => pickImage(3)}>
                     <Image
                         style={styles.img}
                         source={image3 ? { uri: image3 } : require('../../assets/photo.png')} />
-                    <Button
-                        title="add"
-                        onPress={() => pickImage(3)}
-                    />
-                    <Button
-                        title="detail"
-                        onPress={() => props.navigation.navigate("DetailImage", { title: title, detail: detail })}
-                    />
+                        <TouchableOpacity style={styles.adddetail}onPress={() => props.navigation.navigate("DetailImage", { title: title, detail: detail })}>
+                            <Text>Add Detail</Text>
+                        </TouchableOpacity>
+                    </TouchableOpacity>
                 </View>
             </View>
-            <View style={{ flex: 1 }} ></View>
         </View>
+
 
     );
 };
+
 
 const styles = StyleSheet.create({
     container: {
@@ -161,16 +175,53 @@ const styles = StyleSheet.create({
     layout: {
         flexDirection: "row",
         flex: 1,
-
     },
     imgSet: {
-        flex: 2,
+        flex: 1,
         alignItems: "center",
         justifyContent: "center",
-        backgroundColor: "#ffbbbb",
-        margin: 5,
-        borderRadius: 25
-    }
+        backgroundColor: "#CECDBC",
+    },
+    adddetail:{
+        height:50,
+        width:100,
+        justifyContent:"center",
+        fontSize:20,
+        fontWeight:"bold",
+        alignItems:"center",
+        borderRadius:20,
+        backgroundColor:"pink"
+    },
+    containerimageate:{
+        flex: 1, 
+        flexDirection: "row", 
+        // justifyContent: 'space-around', 
+
+      },
+    breakfast: {
+        marginRight:10,
+        marginTop: 5,
+        fontWeight: "bold",
+        color: "#D7385E",
+        fontSize: 17,
+        fontFamily: 'Athiti'
+      },
+      lunch: {
+        marginRight:18,
+        marginTop: 5, 
+        fontWeight: "bold", 
+        color: "#D7385E", 
+        fontSize: 17, 
+        fontFamily: 'Athiti'
+      },
+      dinner: {
+        marginRight:12,
+        marginTop: 5, 
+        fontWeight: "bold", 
+        color: "#D7385E", 
+        fontSize: 17, 
+        fontFamily: 'Athiti'
+      },
 });
 
 export default Home;
