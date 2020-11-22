@@ -28,16 +28,25 @@ const DetailImageScreen = (props) => {
 
     const uploadImage = async () => {
         // setImage(img)
-        const uri = img;
-        const filename = uri;
-        const uploadUri = uri;
+        // const filename = uri;
+        const uploadUri = img.uri;
+        
         setUploading(true);
         setTransferred(0);
-        const task = firebase.storage()
-            .ref(filename)
-            .putString(uploadUri);
+        console.log(uploadUri)
+        let task
+        if (Platform.OS === 'ios') {
+            const response = await fetch(uploadUri);
+            const blob = await response.blob();
+            task = firebase.storage().ref('posts/2XyFr9yi9v936RwB7Z8n/test.png').put(blob)
+        }
+        else {task = firebase.storage()
+            .ref('test/uid/test.png')
+            .putString(uploadUri, 'data_url');}
+        
         // set progress state
         task.on('state_changed', snapshot => {
+            // console.log(Math.round(snapshot.bytesTransferred / snapshot.totalBytes) * 10000)
             setTransferred(
                 Math.round(snapshot.bytesTransferred / snapshot.totalBytes) * 10000
             );
@@ -58,7 +67,7 @@ const DetailImageScreen = (props) => {
         <View style={styles.container}>
             <Image
                 style={styles.img}
-                source={img ? { uri: img } : require('../../assets/photo.png')} />
+                source={img ? { uri: img.uri } : require('../../assets/photo.png')} />
             <Text
                 style={styles.text}
 

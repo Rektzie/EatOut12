@@ -37,13 +37,17 @@ const Home = (props) => {
 
 
 
-    useEffect(async () => {
-        if (Platform.OS !== 'web') {
-            const { status } = await ImagePicker.requestCameraRollPermissionsAsync();
-            if (status !== 'granted') {
-                alert('Sorry');
+    useEffect(() => {
+        console.log('test')
+        const didMount = async () => {
+            if (Platform.OS !== 'web') {
+                const { status } = await ImagePicker.requestCameraRollPermissionsAsync();
+                if (status !== 'granted') {
+                    alert('Sorry');
+                }
             }
         }
+        didMount()
     }, []);
 
     const pickImage = async (num) => {
@@ -59,7 +63,7 @@ const Home = (props) => {
             switch (num) {
                 case 1:
                     setImage1(result.uri)
-                    props.navigation.navigate("DetailImage", { img: result.uri })
+                    props.navigation.navigate("DetailImage", { img: result })
                     break
                 case 2:
                     setImage2(result.uri)

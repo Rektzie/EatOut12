@@ -3,25 +3,35 @@ import { Animated, StyleSheet, Text, View, Button, Easing, Image, StatusBar, Fla
 import firebase from 'firebase'
 
 const Chat = () => {
+
+
+  ////////////////////
+
   const [posts, setPosts] = useState([]);
-
-  const getPosts = () => {
-    const db = firebase.firestore();
-    let postData = [];
-    return db.collection('users').onSnapshot((snapshot) => {
-      snapshot.forEach((doc) => postData.push({ ...doc.data(), id: doc.id }));
-      
-      console.log(postData)
-      setPosts(postData)
-      console.log(posts);
-    });
-  }
-
-  useEffect(() => {
-    getPosts();
-  }, []);
+  const db = firebase.firestore().collection('users');
+  
 
   
+
+  useEffect(() => {
+    const unsubscribe = db.onSnapshot((snapshot) => {
+        let postData = [];
+        snapshot.forEach((doc) => postData.push({ ...doc.data(), id: doc.id }));
+        // console.log({postData})
+        setPosts(postData)
+      })
+    return () => { unsubscribe() }
+  }, [])
+
+  // const getPosts = () => {
+  // getPosts();
+
+
+  // useEffect(() => {
+
+  // }, []);
+
+
 
   // const Item = ({ fullName }) => (
   //   <View style={styles.item}>
@@ -48,15 +58,15 @@ const Chat = () => {
   ];
 
   console.log(DATA)
-  const Item = ({title}) => (
+  const Item = ({ title }) => (
     <View style={styles.item}>
       <Text style={styles.title}>{title}</Text>
     </View>
   );
 
 
-  const renderItem = ({item}) => {
-    console.log(item)
+  const renderItem = ({ item }) => {
+    console.log(item.fullName)
     return (
       <View style={styles.item}>
         <Text style={styles.title}>{item.fullName}</Text>
@@ -73,11 +83,21 @@ const Chat = () => {
   return (
     <View style={styles.layout}>
       <SafeAreaView style={styles.container}>
-        <FlatList
-          data={[posts]}
+        {/* <FlatList
+          data={DATA}
           renderItem={renderItem}
           keyExtractor={item => item.fullName}
-        />
+        /> */}
+        {
+          posts.map(user => {
+            console.log(user.fullName)
+            return (
+              <View style={styles.item}>
+                <Text style={styles.title}>{user.fullName}</Text>
+              </View>
+            )
+          })
+        }
       </SafeAreaView>
     </View>
 
@@ -91,12 +111,15 @@ const styles = StyleSheet.create({
   },
   item: {
     backgroundColor: '#f9c2ff',
-    padding: 20,
-    marginVertical: 8,
-    marginHorizontal: 16,
+    height: 40,
+    marginTop: 10
+    // padding: 50,
+    // marginVertical: 8,
+    // marginHorizontal: 16,
   },
   title: {
     fontSize: 32,
+    color: '#000000'
   },
 });
 

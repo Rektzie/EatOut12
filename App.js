@@ -19,11 +19,11 @@ if (!global.atob) { global.atob = decode }
 
 const Stack = createStackNavigator();
 
-const rootReducer = combineReducers({
-  UserReducer
-})
+// const rootReducer = combineReducers({
+//   UserReducer
+// })
 
-const store =  createStore(rootReducer)
+// const store =  createStore(rootReducer)
 
 export default function App() {
 
@@ -73,7 +73,7 @@ export default function App() {
     //   </Stack.Navigator>
     // </NavigationContainer>
 
-    <Provider store={store}>
+    // <Provider store={store}>
     <NavigationContainer>
       {user ? (
         <RootNav props={user}></RootNav>
@@ -87,7 +87,7 @@ export default function App() {
           </Stack.Navigator>
         )}
     </NavigationContainer>
-    </Provider>
+    // </Provider>
 
   );
 }

@@ -58,36 +58,39 @@ export default function EditProfileScreen(props) {
             });
     };
 
-    useEffect(async () => {
-        if (Platform.OS !== 'web') {
-            const { status } = await ImagePicker.requestCameraRollPermissionsAsync();
-            if (status !== 'granted') {
-                alert('Sorry');
+    useEffect(() => {
+        const didMount = async () => {
+            if (Platform.OS !== 'web') {
+                const { status } = await ImagePicker.requestCameraRollPermissionsAsync();
+                if (status !== 'granted') {
+                    alert('Sorry');
+                }
             }
+    
+            const dbRef = firebase.firestore().collection('users').doc(uid)
+            dbRef.get().then((res) => {
+                if (res.exists) {
+                    const user = res.data();
+                    setUserData(
+                        {
+                            email: user.email,
+                            fullName: user.fullName,
+                            age: user.age,
+                            BMI: user.BMI,
+                            weight: user.weight,
+                            height: user.height,
+                           
+                            
+                        }
+    
+    
+                    )
+                } else {
+                    console.log("Document does not exist!");
+                }
+            });
         }
-
-        const dbRef = firebase.firestore().collection('users').doc(uid)
-        dbRef.get().then((res) => {
-            if (res.exists) {
-                const user = res.data();
-                setUserData(
-                    {
-                        email: user.email,
-                        fullName: user.fullName,
-                        age: user.age,
-                        BMI: user.BMI,
-                        weight: user.weight,
-                        height: user.height,
-                       
-                        
-                    }
-
-
-                )
-            } else {
-                console.log("Document does not exist!");
-            }
-        });
+        didMount()
     }, []);
 
     const pickImage = async () => {

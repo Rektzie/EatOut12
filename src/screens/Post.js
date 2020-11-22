@@ -6,8 +6,6 @@ const Post = () => {
 
   const [uid, setUid] = useState('')
     useEffect( () => {
-
-
         const auth = firebase.auth()
         setUid(auth.currentUser.uid)
     },[])
