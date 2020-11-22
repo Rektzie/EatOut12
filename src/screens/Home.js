@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
-import { Animated, StyleSheet, Text, View, Button, Image, Platform, TouchableOpacity } from 'react-native';
+import { Animated, StyleSheet, Text, View, Button, Image, Platform, TouchableOpacity, FlatList, SafeAreaView } from 'react-native';
 import CaloriesBurned from "../components/CaloriesBurned"
 import Streak from "../components/Streak"
 import * as ImagePicker from "expo-image-picker"
@@ -18,14 +18,22 @@ const onSignOutButtonPressed = () => {
         .then(() => console.log('User signed out!'));
 }
 
+
+
+
 const Home = (props) => {
 
+
+    
 
     const [image1, setImage1] = useState(null)
     const [image2, setImage2] = useState(null)
     const [image3, setImage3] = useState(null)
     const title = props.navigation.getParam("title")
     const detail = props.navigation.getParam("detail")
+    // const getCal = props.navigation.getParam("cal")
+
+
 
 
 
@@ -67,31 +75,25 @@ const Home = (props) => {
         }
     }
 
+   
     return (
-        <View style={{ flex: 2 }}>
-            
+        <View style={{ flex: 3 }}>
+
 
             <View style={{ flex: 1 }}>
-                {/* <View style={{ flexDirection: 'row' }}>
-                <CaloriesBurned />
-                <Streak />
-            </View>
-            <View style={{ flexDirection: 'row' }}>
-                <CaloriesBurned />
-                <Streak />
-            </View> */}
+               
+                {/* <View style={{ flexDirection: 'row', marginTop: 50 }}>
+                    <CaloriesBurned />
+
+                </View> */}
             </View>
 
-            <Text> {title} </Text>
+            {/* <Text> {getCal} </Text> */}
             <TouchableOpacity onPress={onSignOutButtonPressed} ><Text>Logout</Text></TouchableOpacity>
 
             <View style={styles.layout}>
-                <Text>
-                    {title}
-                </Text>
-                <Text>
-                    {detail}
-                </Text>
+
+
                 <View style={styles.imgSet}>
                     <Image
                         style={styles.img}
@@ -100,6 +102,7 @@ const Home = (props) => {
                         title="add"
                         onPress={() => pickImage(1)}
                     />
+
                     <Button
                         title="detail"
                         onPress={() => props.navigation.navigate("DetailImage", { title: title, detail: detail })}
@@ -113,6 +116,10 @@ const Home = (props) => {
                         title="add"
                         onPress={() => pickImage(2)}
                     />
+                    <Button
+                        title="detail"
+                        onPress={() => props.navigation.navigate("DetailImage", { title: title, detail: detail })}
+                    />
                 </View>
                 <View style={styles.imgSet}>
                     <Image
@@ -122,8 +129,13 @@ const Home = (props) => {
                         title="add"
                         onPress={() => pickImage(3)}
                     />
+                    <Button
+                        title="detail"
+                        onPress={() => props.navigation.navigate("DetailImage", { title: title, detail: detail })}
+                    />
                 </View>
             </View>
+            <View style={{ flex: 1 }} ></View>
         </View>
 
     );
@@ -145,11 +157,15 @@ const styles = StyleSheet.create({
     layout: {
         flexDirection: "row",
         flex: 1,
+
     },
     imgSet: {
-        flex: 1,
+        flex: 2,
         alignItems: "center",
-        justifyContent: "center"
+        justifyContent: "center",
+        backgroundColor: "#ffbbbb",
+        margin: 5,
+        borderRadius: 25
     }
 });
 

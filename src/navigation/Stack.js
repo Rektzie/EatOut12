@@ -3,6 +3,8 @@ import { createAppContainer } from "react-navigation"
 import { ChatScreen, TestScreen } from '../screens'
 import RootNav from "./TabNavigation"
 import DetailImageScreen from "../screens/detailImageScreen"
+import EditProfileScreen from "../screens/EditProfileScreen"
+
 const Stack = createStackNavigator ({
     Screen1: {
         screen: TestScreen,
@@ -20,11 +22,17 @@ const Stack = createStackNavigator ({
             title: "ChatScreen"
         }
     },
-    DetailImage: {
-        screen: DetailImageScreen,
-        navigationOptions:{
-            title: "Detail"
-        }
-    }
+    // DetailImage: {
+    //     screen: DetailImageScreen,
+    //     navigationOptions:{
+    //         title: "Detail"
+    //     }
+    // },
+    // EditProfile: {
+    //     screen: EditProfileScreen,
+    //     navigationOptions:{
+    //         title: "Edit"
+    //     }
+    // }
 })
 export default createAppContainer(Stack)

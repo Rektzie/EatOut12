@@ -8,6 +8,7 @@ import React from "react";
 import { createStackNavigator } from "react-navigation-stack"
 import DetailImageScreen from "../screens/detailImageScreen"
 import Profile from "../screens/profile"
+import EditProfileScreen from "../screens/EditProfileScreen"
 
 
 const Stack = createStackNavigator ({
@@ -22,15 +23,31 @@ const Stack = createStackNavigator ({
           title: "Detail"
       }
   }
+
+  
   
 }, {defaultNavigationOptions: {
   headerShown : false
 }})
 
-
+const StackEdit = createStackNavigator ({
+  Screen1: {
+      screen: Profile,
+      
+  },
+ 
+  EditProfile: {
+    screen: EditProfileScreen,
+    navigationOptions:{
+        title: "Edit"
+      }
+  }
+}, {defaultNavigationOptions: {
+  headerShown : false
+}})
 
 const TabNavigator = createBottomTabNavigator({
-  Spring: {
+  Home: {
     screen: Stack,
     navigationOptions: {
       tabBarIcon: () => {
@@ -55,7 +72,7 @@ const TabNavigator = createBottomTabNavigator({
     },
   },
   Profile: {
-    screen: Profile,
+    screen: StackEdit,
     navigationOptions: {
       tabBarIcon: () => {
         return <AntDesign name="swap" size={24} color={"black"} />;

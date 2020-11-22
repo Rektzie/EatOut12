@@ -20,6 +20,7 @@ const DetailImageScreen = (props) => {
 
     
     const [title, setTitle] = useState("")
+    const [cal, setCal] = useState("")
     const [detail, setDetail] = useState("")
     const [image, setImage] = useState("");
     const [uploading, setUploading] = useState(false);
@@ -66,6 +67,14 @@ const DetailImageScreen = (props) => {
                 value={title}
                 onChangeText={(text) => setTitle(text)}
             ></TextInput>
+            <Text
+                style={styles.text}
+
+            >แคลอรี : </Text>
+            <TextInput
+                value={cal}
+                onChangeText={(text) => setCal(text)}
+            ></TextInput>
             <Text style={styles.text}>คำอธิบาย : </Text>
             <TextInput
                 multiline={true}
@@ -76,7 +85,11 @@ const DetailImageScreen = (props) => {
             <Button
                 title="save"
                 style={styles.text}
-                onPress={() => { uploadImage(); props.navigation.popToTop({ title: title, detail: detail }) }}
+
+                onPress={() => { uploadImage(); props.navigation.popToTop({ title: title, detail: detail,  cal: cal}) }}
+
+
+
             />
         </View>
     )
