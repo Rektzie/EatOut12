@@ -1,21 +1,12 @@
-import React, { useRef, useState, useEffect } from "react";
+import React, { useRef } from "react";
 import { Animated, StyleSheet, Text, View, Button, Easing, Image } from "react-native";
-import firebase from 'firebase'
+import Newsfeed from "../components/newsfeed";
 
 const Post = () => {
-
-  const [uid, setUid] = useState('')
-    useEffect( () => {
-        console.log('hihi')
-
-        const auth = firebase.auth()
-        setUid(auth.currentUser.uid)
-    },[])
  
   return (
     <View style={styles.layout}>
-      
-      <Text>{uid}</Text>
+      < Newsfeed / >
     </View>
    
   );
