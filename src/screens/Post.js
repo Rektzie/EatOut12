@@ -6,7 +6,7 @@ const Post = () => {
  
   return (
     <View style={styles.layout}>
-      < Newsfeed / >
+      < Newsfeed />
     </View>
    
   );

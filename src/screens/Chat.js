@@ -1,33 +1,104 @@
-import React, { useRef } from "react";
-import { Animated, StyleSheet, Text, View, Button, Easing, Image } from "react-native";
+import React, { useEffect, useState } from "react";
+import { Animated, StyleSheet, Text, View, Button, Easing, Image, StatusBar, FlatList, SafeAreaView } from "react-native";
+import firebase from 'firebase'
 
-const Post = () => {
- 
+const Chat = () => {
+  const [posts, setPosts] = useState([]);
+
+  const getPosts = () => {
+    const db = firebase.firestore();
+    let postData = [];
+    return db.collection('users').onSnapshot((snapshot) => {
+      snapshot.forEach((doc) => postData.push({ ...doc.data(), id: doc.id }));
+      
+      console.log(postData)
+      setPosts(postData)
+      console.log(posts);
+    });
+  }
+
+  useEffect(() => {
+    getPosts();
+  }, []);
+
+  
+
+  // const Item = ({ fullName }) => (
+  //   <View style={styles.item}>
+  //     <Text  style={styles.title}>{fullName}</Text>
+  //   </View>
+  // );
+
+  // const renderItem = ({ item }) => (
+  //   <Item title={item.fullName} />
+  // );
+  const DATA = [
+    {
+      fullName: 'bd7acbea-c1b1-46c2-aed5-3ad53abb28ba',
+      id: 'First Item',
+    },
+    {
+      fullName: '3ac68afc-c605-48d3-a4f8-fbd91aa97f63',
+      id: 'Second Item',
+    },
+    {
+      fullName: '58694a0f-3da1-471f-bd96-145571e29d72',
+      id: 'Third Item',
+    },
+  ];
+
+  console.log(DATA)
+  const Item = ({title}) => (
+    <View style={styles.item}>
+      <Text style={styles.title}>{title}</Text>
+    </View>
+  );
+
+
+  const renderItem = ({item}) => {
+    console.log(item)
+    return (
+      <View style={styles.item}>
+        <Text style={styles.title}>{item.fullName}</Text>
+      </View>)
+
+  }
+
+  // <Item title={item.fullName} />
+
+
+
+
+
   return (
     <View style={styles.layout}>
-
+      <SafeAreaView style={styles.container}>
+        <FlatList
+          data={[posts]}
+          renderItem={renderItem}
+          keyExtractor={item => item.fullName}
+        />
+      </SafeAreaView>
     </View>
-   
+
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: "center",
+    marginTop: StatusBar.currentHeight || 0,
   },
-  botton: {
-    justifyContent: "flex-end",
+  item: {
+    backgroundColor: '#f9c2ff',
+    padding: 20,
+    marginVertical: 8,
+    marginHorizontal: 16,
   },
-  layout:{
-    flexDirection: "row",
-    flex: 1
+  title: {
+    fontSize: 32,
   },
-  img:{
-    width: 100,
-    height: 100
-  }
- 
 });
 
-export default Post;
+
+export default Chat;

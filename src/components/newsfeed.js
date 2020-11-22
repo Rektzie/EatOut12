@@ -1,33 +1,66 @@
-import React, { useRef } from "react";
-import { Animated, StyleSheet, Text, View, Easing, Image, ImageBackground} from "react-native";
+import React, { useEffect, useRef, useState } from "react";
+import { Animated, StyleSheet, Text, View, Easing, Image, ImageBackground, Button } from "react-native";
 import { ScrollView, TextInput, TouchableOpacity } from "react-native-gesture-handler";
 import { MaterialIcons } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
+import firebase from 'firebase'
 
 const Newsfeed = () => {
+
+  const [snap, setSnap] = useState()
+
+  const Test = async () => {
+    // const dbRef = firebase.firestore().collection('users')
+    // dbRef
+    //   .get()
+    //   .then(snapshot => {
+    //     snapshot
+    //       .docs
+    //       .forEach(doc => {
+
+
+    //         <Text>{JSON.parse(doc._document.fullName.toString())}</Text>
+    //       });
+    //   });
+
+
+
+    
+    
+  }
+
+
+
+
 
   return (
     <ScrollView>
       <View style={{ backgroundColor: "#9100FF" }}>
         <View style={styles.header}>
-        <LinearGradient colors={['#ae1e1e', '#ff005f', '#ffcc00']}  
-        stops={[0, 35, 100]}
-        style={styles.imagecolor} >
-          <Image style={styles.imageprofile}
+          <Text>{snap}</Text>
+          <LinearGradient colors={['#ae1e1e', '#ff005f', '#ffcc00']}
+            stops={[0, 35, 100]}
+            style={styles.imagecolor} >
+            <Image style={styles.imageprofile}
 
-            source={{
-              uri: 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a1/Beauty_girl.jpg/499px-Beauty_girl.jpg',
-            }}
-          />
+              source={{
+                uri: 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a1/Beauty_girl.jpg/499px-Beauty_girl.jpg',
+              }}
+            />
           </LinearGradient>
+          <Button
+            title="test"
+            onPress={() => Test()}
+          >
+          </Button>
           <Text style={styles.headertextname}>
             Ploy.sucha
         </Text>
           <View style={{ flexDirection: "row", marginLeft: 15 }}>
             <AntDesign name="wechat" size={40} color="#B0CDF6" />
           </View>
-        
+
         </View>
       </View>
       <View style={{ flexDirection: "column" }}>
@@ -77,18 +110,18 @@ const Newsfeed = () => {
 
 
 
-      <View style={{ backgroundColor: "#9100FF", marginTop:10 }}>
+      <View style={{ backgroundColor: "#9100FF", marginTop: 10 }}>
         <View style={styles.header}>
-        <LinearGradient colors={['#ae1e1e', '#ff005f', '#ffcc00']} style={styles.imagecolor} >
-          <Image style={styles.imageprofile}
-        
-            source={{
-              uri: 'https://www.eurotimes.org/wp-content/uploads/2020/03/mona-lisa-with-face-mask-3957982-e1584612250409-1024x717.jpg',
-            }}
-          />
+          <LinearGradient colors={['#ae1e1e', '#ff005f', '#ffcc00']} style={styles.imagecolor} >
+            <Image style={styles.imageprofile}
+
+              source={{
+                uri: 'https://www.eurotimes.org/wp-content/uploads/2020/03/mona-lisa-with-face-mask-3957982-e1584612250409-1024x717.jpg',
+              }}
+            />
           </LinearGradient>
           <Text style={styles.headertextname}>
-          ramon_lisa
+            ramon_lisa
         </Text>
           <View style={{ flexDirection: "row", marginLeft: 15 }}>
             <AntDesign name="wechat" size={40} color="#B0CDF6" />
@@ -139,18 +172,18 @@ const Newsfeed = () => {
 
       <View style={styles.line} />
 
-      <View style={{ backgroundColor: "#9100FF", marginTop:10 }}>
+      <View style={{ backgroundColor: "#9100FF", marginTop: 10 }}>
         <View style={styles.header}>
-        <LinearGradient colors={['#ae1e1e', '#ff005f', '#ffcc00']} style={styles.imagecolor} >
-          <Image style={styles.imageprofile}
-        
-            source={{
-              uri: 'https://i.pinimg.com/originals/cb/44/fd/cb44fde77872ff9f9e37a2ed89c6e284.jpg',
-            }}
-          />
+          <LinearGradient colors={['#ae1e1e', '#ff005f', '#ffcc00']} style={styles.imagecolor} >
+            <Image style={styles.imageprofile}
+
+              source={{
+                uri: 'https://i.pinimg.com/originals/cb/44/fd/cb44fde77872ff9f9e37a2ed89c6e284.jpg',
+              }}
+            />
           </LinearGradient>
           <Text style={styles.headertextname}>
-          Schhh.non
+            Schhh.non
         </Text>
           <View style={{ flexDirection: "row", marginLeft: 15 }}>
             <AntDesign name="wechat" size={40} color="#B0CDF6" />
@@ -214,18 +247,18 @@ const styles = StyleSheet.create({
   },
   header: {
     justifyContent: "flex-start",
-    flex: 1, 
+    flex: 1,
     flexDirection: "row",
     margin: 10,
     backgroundColor: "#9100FF"
   },
   imagecolor: {
-    borderRadius:35,
-    overflow:'hidden',
-    height:68,
-    width:68,
-    justifyContent:'center',
-    alignItems:"center"
+    borderRadius: 35,
+    overflow: 'hidden',
+    height: 68,
+    width: 68,
+    justifyContent: 'center',
+    alignItems: "center"
   },
   imageprofile: {
     width: 60,
@@ -259,35 +292,35 @@ const styles = StyleSheet.create({
     fontFamily: 'Athiti'
   },
   lunch: {
-    marginRight: 25, 
-    marginLeft:10,
-    marginTop: 5, 
-    fontWeight: "bold", 
-    color: "#D7385E", 
-    fontSize: 16, 
+    marginRight: 25,
+    marginLeft: 10,
+    marginTop: 5,
+    fontWeight: "bold",
+    color: "#D7385E",
+    fontSize: 16,
     fontFamily: 'Athiti'
   },
   dinner: {
-    marginLeft: 10, 
-    marginRight: 20, 
-    marginTop: 5, 
-    fontWeight: "bold", 
-    color: "#D7385E", 
-    fontSize: 16, 
+    marginLeft: 10,
+    marginRight: 20,
+    marginTop: 5,
+    fontWeight: "bold",
+    color: "#D7385E",
+    fontSize: 16,
     fontFamily: 'Athiti'
   },
   inputkcal: {
-    width: "23%", 
-    height: 30, 
-    borderWidth: 0.5, 
-    borderColor: "#3186FF", 
+    width: "23%",
+    height: 30,
+    borderWidth: 0.5,
+    borderColor: "#3186FF",
     borderRadius: 20
   },
   textkcal: {
-    fontWeight: "bold", 
-    color: "gray", 
-    fontSize: 16, 
-    fontFamily: 'Athiti', 
+    fontWeight: "bold",
+    color: "gray",
+    fontSize: 16,
+    fontFamily: 'Athiti',
     textAlign: "center"
   },
   line: {
@@ -295,22 +328,22 @@ const styles = StyleSheet.create({
     borderBottomColor: 'black',
     borderBottomWidth: 1,
   },
-  containerimageate:{
-    flex: 1, 
-    flexDirection: "row", 
-    justifyContent: 'space-around', 
-    margin: 2 
+  containerimageate: {
+    flex: 1,
+    flexDirection: "row",
+    justifyContent: 'space-around',
+    margin: 2
   },
-  containerate:{
-    flexDirection: "row", 
-    flex: 1, 
-    justifyContent: 'space-around', 
-    marginHorizontal: 5, 
+  containerate: {
+    flexDirection: "row",
+    flex: 1,
+    justifyContent: 'space-around',
+    marginHorizontal: 5,
     alignItems: "center"
   },
-  containerkcal:{
-    flexDirection: "row", 
-    flex: 1, 
+  containerkcal: {
+    flexDirection: "row",
+    flex: 1,
     justifyContent: 'space-around'
   }
 

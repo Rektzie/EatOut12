@@ -42,7 +42,9 @@ const StackEdit = createStackNavigator ({
         title: "Edit"
       }
   }
-})
+}, {defaultNavigationOptions: {
+  headerShown : false
+}})
 
 const TabNavigator = createBottomTabNavigator({
   Home: {
