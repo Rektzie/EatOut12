@@ -1,8 +1,19 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Animated, StyleSheet, Text, View, Image, Button } from "react-native";
+import { Animated, StyleSheet, Text, View, Image, Button, TouchableOpacityBase } from "react-native";
 import { ScrollView, TextInput, TouchableOpacity } from "react-native-gesture-handler";
 import { MaterialIcons } from '@expo/vector-icons';
-import firebase from 'firebase'
+import firebase from 'firebase';
+import { LinearGradient } from 'expo-linear-gradient';
+import { MaterialCommunityIcons } from '@expo/vector-icons'; 
+
+const onSignOutButtonPressed = () => {
+  // firebase.auth().signOut().then(function () {
+  // Sign-out successful.
+  firebase.auth()
+      .signOut()
+      .then(() => console.log('User signed out!'));
+}
+
 const ProfileScreen = (props) => {
   const [userData, setUserData] = useState({
 
@@ -52,40 +63,52 @@ const ProfileScreen = (props) => {
   return (
 
     <View style={{ flex: 1 }}>
+       <LinearGradient colors={['#ffd555', '#fcd190', '#f9ea96']}  
+        stops={[0, 48                                                         , 100]}
+        style={styles.bgcolor} >
+      {/* <View style={{flex: 1.6,backgroundColor:"#F9F1CE"}}> */}
       <View style={styles.containerprofileimageandedit}>
 
         {/* <Text>{height}</Text> */}
 
 
 
-        <Image style={{ width: 150, height: 150, }}
+        <LinearGradient colors={['#ae1e1e', '#ff005f', '#ffcc00']}  
+        stops={[0, 35, 100]}
+        style={styles.imagecolor} >
+          <Image style={styles.imageprofile}
 
-          source={{
-            uri: 'https://reactnative.dev/img/tiny_logo.png',
-          }}
-        />
-        <View style={{ flexDirection: "row" }}>
-          <MaterialIcons name="edit" size={25} color="gray" style={{ marginRight: 5 }} />
-          <Button
-            title="Edit Profile"
-            onPress={() => props.navigation.navigate("EditProfile")}></Button>
+            source={{
+              uri: 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a1/Beauty_girl.jpg/499px-Beauty_girl.jpg',
+            }}
+          />
+          </LinearGradient>
+        <View style={{ flexDirection: "row", marginTop:10 }}>
+          <TouchableOpacity style={{flexDirection:"row",width:135, height:35, backgroundColor:"#006FFF", color:"white", justifyContent:"center", alignItems:"center", borderRadius:20}} onPress={() => props.navigation.navigate("EditProfile")}>
+          <MaterialIcons name="edit" size={25} color="white" style={{marginRight:3}}/>
+            <Text style={{color:"white", fontSize:16, fontWeight:"bold"}}>Edit Profile</Text>
+            </TouchableOpacity>
           {/* <Text style={styles.texteidtprofile}>Edit Profile</Text> */}
 
         </View>
       </View>
       <View style={{ flex: 1 }}>
-        <View style={{ flexDirection: "row", marginTop: 10, }}>
+        <View style={{ flexDirection: "row" }}>
+        <MaterialCommunityIcons name="rename-box" size={24} color="gray" style={{marginLeft:15, lineHeight:33}}/>
           <Text style={styles.nameandemail}>Name</Text>
-          <Text paddingLeft={20} style={styles.nameandemail}>{userData.fullName}</Text>
+          <TextInput  editable={false} selectTextOnFocus={false} onEndEditing={false}  paddingLeft={20} style={styles.inputnameandemail}>
+            <Text style={{color:'gray'}}>{userData.fullName}</Text></TextInput>
         </View>
 
         <View style={{ flexDirection: "row", marginTop: 15 }}>
+        <MaterialCommunityIcons name="email" size={24} color="gray" style={{marginLeft:15, lineHeight:33}}/>
           <Text style={styles.nameandemail}>Email</Text>
-          <Text paddingLeft={20} style={styles.nameandemail}>{userData.email}</Text>
+          <TextInput  editable={false} selectTextOnFocus={false} onEndEditing={false}  paddingLeft={20} style={styles.inputnameandemail}>
+          <Text style={{color:'gray'}}>{userData.email}</Text></TextInput>
 
         </View>
 
-        <View style={styles.line} />
+        {/* <View style={styles.line} />
 
 
         <View style={{ flexDirection: "row" }}>
@@ -103,19 +126,21 @@ const ProfileScreen = (props) => {
 
           <Text style={styles.height}>Height</Text>
           <Text paddingLeft={20} style={styles.height}>{userData.height}</Text>
+        </View> */}
         </View>
-
-        <View style={styles.line} />
+        {/* <View style={styles.line} /> */}
 
         {/* <View style={{ flexDirection: "row" }}>
           <Text style={styles.goal}>Goal Reached Streak</Text>
           <Text editable={false} selectTextOnFocus={false} onEndEditing={false} paddingLeft={20} style={styles.inputgoal}><Text>5สมมติเลข</Text></Text>
         </View> */}
-      </View>
+      {/* </View> */}
+      </LinearGradient>
 
       <View style={{ flex: 1 }}>
         <View style={{ justifyContent: "center", alignItems: "center", flex: 1, marginTop: 20 }}>
-          <TouchableOpacity style={styles.logoutbutton}>
+          
+          <TouchableOpacity onPress={onSignOutButtonPressed} style={styles.logoutbutton}>
             <Text style={styles.textlogout}>Logout</Text>
           </TouchableOpacity>
         </View>
@@ -140,18 +165,20 @@ const styles = StyleSheet.create({
   },
   nameandemail: {
     marginTop: 5,
-    marginLeft: 20,
+    marginLeft: 10,
     fontWeight: "bold",
     color: "#707070",
     fontSize: 18,
-    fontFamily: 'Athiti'
+    fontFamily: 'Athiti',
+    lineHeight:25
   },
   inputnameandemail: {
+    
     marginLeft: 20,
-    width: "52%",
-    height: 30,
+    width: "55%",
+    height: 35,
     borderWidth: 0.5,
-    borderColor: "#3186FF",
+    borderColor: "gray",
     borderRadius: 20
   },
   line: {
@@ -228,6 +255,33 @@ const styles = StyleSheet.create({
     borderColor: "#3186FF",
     borderRadius: 20
   },
+  bgcolor: {
+    height:'60%',
+    overflow:'hidden',
+    justifyContent:'center',
+    alignItems:"center",
+  },
+  imagecolor: {
+    borderRadius:69,
+    overflow:'hidden',
+    height:135,
+    width:135,
+    justifyContent:'center',
+    alignItems:"center",
+    marginTop:10
+  },
+  imageprofile: {
+    justifyContent:'center',
+    alignItems:"center",
+    width: 110,
+    height: 110,
+    borderRadius: 50,
+    overflow: "hidden",
+    borderColor: "black",
+    borderWidth: 3,
+    
+    
+  },
   // goal: {
   //   marginTop: 23,
   //   marginLeft: 20,
@@ -252,7 +306,7 @@ const styles = StyleSheet.create({
     borderRadius: 18,
     width: 150,
     height: 50,
-    backgroundColor: "#585858"
+    backgroundColor: "#E83232"
   },
   textlogout: {
     fontWeight: "bold",
@@ -263,7 +317,8 @@ const styles = StyleSheet.create({
   containerprofileimageandedit: {
     justifyContent: "center",
     alignItems: "center",
-    flex: 1
+    flex: 2
+    
   }
 
 

@@ -1,9 +1,11 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Animated, StyleSheet, Text, View, Image, Button, Platform } from "react-native";
+import { Animated, StyleSheet, Text, View, Image, Button, Platform, Keyboard, TouchableWithoutFeedback, TouchableOpacityBase, ImageBackground } from "react-native";
 import { ScrollView, TextInput, TouchableOpacity } from "react-native-gesture-handler";
 import { MaterialIcons } from '@expo/vector-icons';
 import firebase from 'firebase'
 import * as ImagePicker from "expo-image-picker"
+import { LinearGradient } from 'expo-linear-gradient';
+import { MaterialCommunityIcons } from '@expo/vector-icons'; 
 // id: uid,
 // email,
 // fullName,
@@ -42,7 +44,7 @@ export default function EditProfileScreen(props) {
         }).then((docRef) => {
             setUserData(
                 {
-                    
+
                     email: user.email,
                     fullName: user.fullName,
                     age: user.age,
@@ -66,7 +68,7 @@ export default function EditProfileScreen(props) {
                     alert('Sorry');
                 }
             }
-    
+
             const dbRef = firebase.firestore().collection('users').doc(uid)
             dbRef.get().then((res) => {
                 if (res.exists) {
@@ -79,11 +81,11 @@ export default function EditProfileScreen(props) {
                             BMI: user.BMI,
                             weight: user.weight,
                             height: user.height,
-                           
-                            
+
+
                         }
-    
-    
+
+
                     )
                 } else {
                     console.log("Document does not exist!");
@@ -107,48 +109,62 @@ export default function EditProfileScreen(props) {
         }
     }
 
+    const img = { uri: "https://sv1.picz.in.th/images/2020/11/23/bFYp8t.jpg" };
+
     return (
-        <View style={{ flex: 1 }}>
-            <View style={styles.containerprofileimageandedit}>
+        <ImageBackground style={styles.img}
+            source={img} >
+            <TouchableWithoutFeedback onPress={() => {
+                Keyboard.dismiss();
+            }}>
 
-                {/* <Text>{height}</Text> */}
+                <ScrollView >
+
+
+                    <View style={styles.containerprofileimageandedit}>
+
+                        {/* <Text>{height}</Text> */}
 
 
 
-                <Image style={{ width: 150, height: 150, }}
+                        <LinearGradient colors={['#ae1e1e', '#ff005f', '#ffcc00']}
+                            stops={[0, 35, 100]}
+                            style={styles.imagecolor} >
+                            <Image style={styles.imageprofile}
 
-                    source={{
-                        uri: 'https://reactnative.dev/img/tiny_logo.png',
-                    }}
-                />
-                <View style={{ flexDirection: "row" }}>
-                    <MaterialIcons name="edit" size={25} color="gray" style={{ marginRight: 5 }} />
-                    <Button
-                        title="Edit Picture"
-                        onPress={() => { props.navigation.navigate("EditProfile") }}
-                    ></Button>
-                    {/* <Text style={styles.texteidtprofile}>Edit Profile</Text> */}
+                                source={{
+                                    uri: 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a1/Beauty_girl.jpg/499px-Beauty_girl.jpg',
+                                }}
+                            />
+                        </LinearGradient>
+                        <View style={{ flexDirection: "row" }}>
+                            <MaterialIcons name="edit" size={25} color="gray" style={{ marginRight: 5 }} />
+                            <Button
+                                title="Edit Picture"
+                                onPress={() => { props.navigation.navigate("EditProfile") }}
+                            ></Button>
+                            {/* <Text style={styles.texteidtprofile}>Edit Profile</Text> */}
 
-                </View>
-            </View>
-            <View style={{ flex: 1 }}>
-                <View style={{ flexDirection: "row", marginTop: 10, }}>
-                    <Text style={styles.nameandemail}>Name</Text>
-                    <TextInput
-                        paddingLeft={20}
-                        style={styles.inputnameandemail}
-                        value={userData.fullName}
-                        onChangeText={text => setUserData({ ...userData, fullName: text })}
-                    ></TextInput>
-                </View>
+                        </View>
+                    </View>
+                    <View style={{ flex: 1 }}>
+                        <View style={{ flexDirection: "row", marginTop: 10,justifyContent:"center" }}>
+                            <Text style={styles.nameandemail}>Name</Text>
+                            <TextInput
+                                paddingLeft={20}
+                                style={styles.inputnameandemail}
+                                value={userData.fullName}
+                                onChangeText={text => setUserData({ ...userData, fullName: text })}
+                            ></TextInput>
+                        </View>
 
-                <View style={{ flexDirection: "row", marginTop: 15 }}>
-                    <Text style={styles.nameandemail}>Email</Text>
-                    <TextInput paddingLeft={20} style={styles.inputnameandemail} value={userData.email} onChangeText={text => setUserData({ ...userData, email: text })}></TextInput>
+                        <View style={{ flexDirection: "row", marginTop: 15,justifyContent:"center" }}>
+                            <Text style={styles.nameandemail}>Email</Text>
+                            <TextInput paddingLeft={20} style={styles.inputnameandemail} value={userData.email} onChangeText={text => setUserData({ ...userData, email: text })}></TextInput>
 
-                </View>
+                        </View>
 
-                <View style={styles.line} />
+                        {/* <View style={styles.line} />
 
 
                 <View style={{ flexDirection: "row" }}>
@@ -168,26 +184,32 @@ export default function EditProfileScreen(props) {
                     <TextInput paddingLeft={20} style={styles.inputheight} value={userData.height} onChangeText={text => setUserData({ ...userData, height: text })}></TextInput>
                 </View>
 
-                <View style={styles.line} />
-                <Button
-                    title="save"
-                    onPress={() => updateUser()}
-                ></Button>
-                {/* <View style={{ flexDirection: "row" }}>
+                <View style={styles.line} /> */}
+                        <View style={{ flex: 1 }}>
+                            <TouchableOpacity style={styles.savebutton}
+                                onPress={() => updateUser()}
+                            >
+                                <Text style={styles.textsave}>Save</Text>
+                            </TouchableOpacity>
+                        </View>
+                        {/* <View style={{ flexDirection: "row" }}>
           <Text style={styles.goal}>Goal Reached Streak</Text>
           <Text editable={false} selectTextOnFocus={false} onEndEditing={false} paddingLeft={20} style={styles.inputgoal}><Text>5สมมติเลข</Text></Text>
         </View> */}
-            </View>
+                    </View>
 
-            {/* <View style={{ flex: 1 }}>
+
+                    {/* <View style={{ flex: 1 }}>
                 <View style={{ justifyContent: "center", alignItems: "center", flex: 1, marginTop: 20 }}>
                     <TouchableOpacity style={styles.logoutbutton}>
                         <Text style={styles.textlogout}>Logout</Text>
                     </TouchableOpacity>
                 </View>
             </View> */}
-        </View>
-
+                    {/* </Image> */}
+                </ScrollView>
+            </TouchableWithoutFeedback>
+        </ImageBackground>
     )
 }
 
@@ -196,9 +218,15 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: "center",
     },
+    img: {
+        height: "100%",
+        width: "100%",
+        flex: 1,
+
+    },
     texteidtprofile: {
         marginRight: 20,
-        marginTop: 5,
+        marginTop: 20,
         fontWeight: "bold",
         color: "#707070",
         fontSize: 18,
@@ -215,7 +243,7 @@ const styles = StyleSheet.create({
     inputnameandemail: {
         marginLeft: 20,
         width: "52%",
-        height: 30,
+        height: 35,
         borderWidth: 0.5,
         borderColor: "#3186FF",
         borderRadius: 20
@@ -311,16 +339,17 @@ const styles = StyleSheet.create({
         borderColor: "#3186FF",
         borderRadius: 20
     },
-    logoutbutton: {
-        alignSelf: 'flex-end',
+    savebutton: {
+        alignSelf: 'center',
         alignItems: "center",
         justifyContent: "center",
         borderRadius: 18,
         width: 150,
         height: 50,
-        backgroundColor: "#585858"
+        marginTop: 30,
+        backgroundColor: "#0068ff"
     },
-    textlogout: {
+    textsave: {
         fontWeight: "bold",
         color: "white",
         fontSize: 18,
@@ -329,8 +358,29 @@ const styles = StyleSheet.create({
     containerprofileimageandedit: {
         justifyContent: "center",
         alignItems: "center",
-        flex: 1
-    }
+        flex: 1,
+        marginTop: 20
+    },
+    imageprofile: {
+        width: 110,
+        height: 110,
+        borderRadius: 50,
+        overflow: "hidden",
+        borderColor: "black",
+        borderWidth: 3,
 
+
+    },
+
+    imagecolor: {
+        borderRadius: 69,
+        overflow: 'hidden',
+        height: 135,
+        width: 135,
+        justifyContent: 'center',
+        alignItems: "center",
+        marginLeft: 20,
+        marginTop: 10
+    },
 
 });
