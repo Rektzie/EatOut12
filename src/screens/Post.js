@@ -6,7 +6,7 @@ const Post = () => {
 
   const [uid, setUid] = useState('')
     useEffect( () => {
-        console.log('hihi')
+
 
         const auth = firebase.auth()
         setUid(auth.currentUser.uid)
@@ -14,7 +14,7 @@ const Post = () => {
  
   return (
     <View style={styles.layout}>
-      {uid}
+      <Text>{uid}</Text>
     </View>
    
   );
