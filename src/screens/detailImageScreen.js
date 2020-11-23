@@ -2,6 +2,7 @@ import React from "react"
 import { View, Image, StyleSheet, Text, TextInput, Button, Platform, Alert } from 'react-native';
 import { useEffect, useState } from 'react';
 import firebase from 'firebase'
+import Fire from '../../Fire'
 // import storage from '@react-native-firebase/storage';
 
 // const { imageName, uploadUri } = this.state;
@@ -11,6 +12,7 @@ const DetailImageScreen = (props) => {
     // const [ imageName, setImageName ] = useState('')
     // const [ uploadUri, setUploadUri ] = useState('')
     const img = props.navigation.getParam("img")
+    const meal = props.navigation.getParam("meal")
     // const gettitle = props.navigation.getParam("title")
     // const getdetail = props.navigation.getParam("detail")
 
@@ -25,6 +27,11 @@ const DetailImageScreen = (props) => {
     const [image, setImage] = useState("");
     const [uploading, setUploading] = useState(false);
     const [transferred, setTransferred] = useState(0);
+    var date = new Date().getDate();
+    var month = new Date().getMonth() + 1; //To get the Current Month
+    var year = new Date().getFullYear(); //To get the Current Year
+    const [today, setToday] = useState(date+'-'+ month+'-'+year)
+    const [userID, setUserID] = useState(Fire.uid)
 
     const uploadImage = async () => {
         // setImage(img)
@@ -38,11 +45,11 @@ const DetailImageScreen = (props) => {
         if (Platform.OS === 'ios') {
             const response = await fetch(uploadUri);
             const blob = await response.blob();
-            task = firebase.storage().ref('posts/2XyFr9yi9v936RwB7Z8n/test.png').put(blob)
+            task = firebase.storage().ref(userID + '/' + today + '/' + meal + '.png').put(blob)
         }
         else {
             task = firebase.storage()
-                .ref('test/uid/test.png')
+                .ref(userID + '/' + today + '/' + meal + '.png')
                 .putString(uploadUri, 'data_url');
         }
 
