@@ -1,5 +1,5 @@
 import React from "react"
-import { View, Image, StyleSheet, Text, TextInput, Button, Platform, Alert} from 'react-native';
+import { View, Image, StyleSheet, Text, TextInput, Button, Platform, Alert } from 'react-native';
 import { useEffect, useState } from 'react';
 import firebase from 'firebase'
 // import storage from '@react-native-firebase/storage';
@@ -18,7 +18,7 @@ const DetailImageScreen = (props) => {
     // const [savedTitle, setSavedTitle] = useState("")
     // const [savedDetail, setSavedDetail] = useState("")
 
-    
+
     const [title, setTitle] = useState("")
     const [cal, setCal] = useState("")
     const [detail, setDetail] = useState("")
@@ -30,7 +30,7 @@ const DetailImageScreen = (props) => {
         // setImage(img)
         // const filename = uri;
         const uploadUri = img.uri;
-        
+
         setUploading(true);
         setTransferred(0);
         console.log(uploadUri)
@@ -40,10 +40,12 @@ const DetailImageScreen = (props) => {
             const blob = await response.blob();
             task = firebase.storage().ref('posts/2XyFr9yi9v936RwB7Z8n/test.png').put(blob)
         }
-        else {task = firebase.storage()
-            .ref('test/uid/test.png')
-            .putString(uploadUri, 'data_url');}
-        
+        else {
+            task = firebase.storage()
+                .ref('test/uid/test.png')
+                .putString(uploadUri, 'data_url');
+        }
+
         // set progress state
         task.on('state_changed', snapshot => {
             // console.log(Math.round(snapshot.bytesTransferred / snapshot.totalBytes) * 10000)
@@ -95,7 +97,7 @@ const DetailImageScreen = (props) => {
                 title="save"
                 style={styles.text}
 
-                onPress={() => { uploadImage(); props.navigation.popToTop({ title: title, detail: detail,  cal: cal}) }}
+                onPress={() => { uploadImage(); props.navigation.popToTop({ title: title, detail: detail, cal: cal }) }}
 
 
 
