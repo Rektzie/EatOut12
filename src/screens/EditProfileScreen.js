@@ -164,7 +164,7 @@ export default function EditProfileScreen(props) {
 
                         </View>
 
-                        {/* <View style={styles.line} />
+                        <View style={styles.line} />
 
 
                 <View style={{ flexDirection: "row" }}>
@@ -184,7 +184,7 @@ export default function EditProfileScreen(props) {
                     <TextInput paddingLeft={20} style={styles.inputheight} value={userData.height} onChangeText={text => setUserData({ ...userData, height: text })}></TextInput>
                 </View>
 
-                <View style={styles.line} /> */}
+    
                         <View style={{ flex: 1 }}>
                             <TouchableOpacity style={styles.savebutton}
                                 onPress={() => updateUser()}
@@ -230,7 +230,7 @@ const styles = StyleSheet.create({
         fontWeight: "bold",
         color: "#707070",
         fontSize: 18,
-        fontFamily: 'Athiti'
+        // fontFamily: 'Athiti'
     },
     nameandemail: {
         marginTop: 5,
@@ -238,7 +238,7 @@ const styles = StyleSheet.create({
         fontWeight: "bold",
         color: "#707070",
         fontSize: 18,
-        fontFamily: 'Athiti'
+        // fontFamily: 'Athiti'
     },
     inputnameandemail: {
         marginLeft: 20,
@@ -259,7 +259,7 @@ const styles = StyleSheet.create({
         fontWeight: "bold",
         color: "#707070",
         fontSize: 18,
-        fontFamily: 'Athiti'
+        // fontFamily: 'Athiti'
     },
     inputage: {
         marginTop: 20,
@@ -277,7 +277,7 @@ const styles = StyleSheet.create({
         fontWeight: "bold",
         color: "#707070",
         fontSize: 18,
-        fontFamily: 'Athiti'
+        // fontFamily: 'Athiti'
     },
     inputbmi: {
         marginLeft: 20,
@@ -294,7 +294,7 @@ const styles = StyleSheet.create({
         fontWeight: "bold",
         color: "#707070",
         fontSize: 18,
-        fontFamily: 'Athiti'
+        // fontFamily: 'Athiti'
     },
     inputweight: {
         marginTop: 20,
@@ -312,7 +312,7 @@ const styles = StyleSheet.create({
         fontWeight: "bold",
         color: "#707070",
         fontSize: 18,
-        fontFamily: 'Athiti'
+        // fontFamily: 'Athiti'
     },
     inputheight: {
         marginTop: 20,
@@ -322,14 +322,7 @@ const styles = StyleSheet.create({
         borderColor: "#3186FF",
         borderRadius: 20
     },
-    // goal: {
-    //   marginTop: 23,
-    //   marginLeft: 20,
-    //   fontWeight: "bold",
-    //   color: "#707070",
-    //   fontSize: 18,
-    //   fontFamily: 'Athiti'
-    // },
+
     inputgoal: {
         marginTop: 20,
         marginLeft: 32,
@@ -353,7 +346,7 @@ const styles = StyleSheet.create({
         fontWeight: "bold",
         color: "white",
         fontSize: 18,
-        fontFamily: 'Athiti'
+        // fontFamily: 'Athiti'
     },
     containerprofileimageandedit: {
         justifyContent: "center",
