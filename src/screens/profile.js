@@ -300,7 +300,6 @@ const styles = StyleSheet.create({
     borderWidth: 3,
     
   },
-
   inputgoal: {
     marginTop: 20,
     marginLeft: 32,

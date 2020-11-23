@@ -6,6 +6,7 @@ import Streak from "../components/Streak"
 import * as ImagePicker from "expo-image-picker"
 import Constants from "expo-constants"
 import firebase from 'firebase'
+import Fire from '../../Fire';
 
 
 
@@ -24,7 +25,14 @@ const onSignOutButtonPressed = () => {
 const Home = (props) => {
 
 
-    
+    var date = new Date().getDate();
+    var month = new Date().getMonth() + 1; //To get the Current Month
+    var year = new Date().getFullYear(); //To get the Current Year
+    const [today, setToday] = useState(date + '-' + month + '-' + year)
+    const userID = Fire.uid
+
+
+
 
     const [image1, setImage1] = useState(null)
     const [image2, setImage2] = useState(null)
@@ -34,7 +42,17 @@ const Home = (props) => {
     // const getCal = props.navigation.getParam("cal")
 
 
-
+    const getImageFromFirebase = (setImgFunc, meal) => {
+        const photoPath = userID + '/' + today + '/' + meal + '.png'
+        let imageRef = firebase.storage().ref(photoPath);
+        imageRef
+            .getDownloadURL()
+            .then((url) => {
+                //from url you can fetched the uploaded image easily
+                setImgFunc(url);
+            })
+            .catch((e) => console.log('getting downloadURL of image error => ', e));
+    }
 
 
     useEffect(() => {
@@ -46,8 +64,13 @@ const Home = (props) => {
                     alert('Sorry');
                 }
             }
+            getImageFromFirebase(setImage1, 'breakfast')
+            getImageFromFirebase(setImage2, 'lunch')
+            getImageFromFirebase(setImage3, 'dinner')
         }
         didMount()
+
+
     }, []);
 
     const pickImage = async (num) => {
@@ -63,13 +86,16 @@ const Home = (props) => {
             switch (num) {
                 case 1:
                     setImage1(result.uri)
-                    props.navigation.navigate("DetailImage", { img: result })
+                    props.navigation.navigate("DetailImage", { img: result, meal: 'breakfast' })
                     break
                 case 2:
                     setImage2(result.uri)
+                    props.navigation.navigate("DetailImage", { img: result, meal: 'lunch' })
                     break
                 case 3:
                     setImage3(result.uri)
+                    props.navigation.navigate("DetailImage", { img: result, meal: 'dinner' })
+
                     break
 
                 default:
@@ -79,10 +105,10 @@ const Home = (props) => {
         }
     }
 
-   
+
     return (
         <View style={{ flex: 2 }}>
-            
+
 
             <View style={{ flex: 2 }}>
                 {/* <View style={{ flexDirection: 'row' }}>
@@ -95,58 +121,58 @@ const Home = (props) => {
             </View> */}
             </View>
 
-        
+
             {/* <View style={styles.containerate}>
           <Text style={styles.breakfast}>Breakfast</Text>
           <Text style={styles.lunch}>Lunch</Text>
           <Text style={styles.dinner}>Dinner</Text>
-        </View> */} 
-        <View style={{flexDirection:"column", backgroundColor:"#D3C894"}}>  
-            <View style={{flexDirection:"row", justifyContent:"space-around", marginTop:8, marginBottom:10, backgroundColor:"#D3C894"}}>  
-                <Text style={styles.breakfast}>Breakfast</Text>
-                <Text style={styles.lunch}>Lunch</Text>
-                <Text style={styles.dinner}>Dinner</Text>
+        </View> */}
+            <View style={{ flexDirection: "column", backgroundColor: "#D3C894" }}>
+                <View style={{ flexDirection: "row", justifyContent: "space-around", marginTop: 8, marginBottom: 10, backgroundColor: "#D3C894" }}>
+                    <Text style={styles.breakfast}>Breakfast</Text>
+                    <Text style={styles.lunch}>Lunch</Text>
+                    <Text style={styles.dinner}>Dinner</Text>
+                </View>
             </View>
-        </View>
             <View style={styles.layout}>
-                           
-                    
 
-                 <Text>
+
+
+                <Text>
                     {title}
                 </Text>
                 <Text>
                     {detail}
-                </Text> 
+                </Text>
 
                 <View style={styles.imgSet} >
                     <TouchableOpacity onPress={() => pickImage(1)}>
-                    <Image
-                        style={styles.img}
-                        source={image1 ? { uri: image1 } : require('../../assets/photo.png')} />
+                        <Image
+                            style={styles.img}
+                            source={image1 ? { uri: image1 } : require('../../assets/photo.png')} />
 
 
-                        <TouchableOpacity style={styles.adddetail}onPress={() => props.navigation.navigate("DetailImage", { title: title, detail: detail })}>
+                        <TouchableOpacity style={styles.adddetail} onPress={() => props.navigation.navigate("DetailImage", { title: title, detail: detail })}>
                             <Text>Add Detail</Text>
                         </TouchableOpacity>
                     </TouchableOpacity>
                 </View>
                 <View style={styles.imgSet}>
                     <TouchableOpacity onPress={() => pickImage(2)}>
-                    <Image
-                        style={styles.img}
-                        source={image2 ? { uri: image2 } : require('../../assets/photo.png')} />
-                        <TouchableOpacity style={styles.adddetail}onPress={() => props.navigation.navigate("DetailImage", { title: title, detail: detail })}>
+                        <Image
+                            style={styles.img}
+                            source={image2 ? { uri: image2 } : require('../../assets/photo.png')} />
+                        <TouchableOpacity style={styles.adddetail} onPress={() => props.navigation.navigate("DetailImage", { title: title, detail: detail })}>
                             <Text>Add Detail</Text>
                         </TouchableOpacity>
                     </TouchableOpacity>
                 </View>
                 <View style={styles.imgSet}>
                     <TouchableOpacity onPress={() => pickImage(3)}>
-                    <Image
-                        style={styles.img}
-                        source={image3 ? { uri: image3 } : require('../../assets/photo.png')} />
-                        <TouchableOpacity style={styles.adddetail}onPress={() => props.navigation.navigate("DetailImage", { title: title, detail: detail })}>
+                        <Image
+                            style={styles.img}
+                            source={image3 ? { uri: image3 } : require('../../assets/photo.png')} />
+                        <TouchableOpacity style={styles.adddetail} onPress={() => props.navigation.navigate("DetailImage", { title: title, detail: detail })}>
                             <Text>Add Detail</Text>
                         </TouchableOpacity>
                     </TouchableOpacity>
@@ -182,46 +208,46 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         backgroundColor: "#CECDBC",
     },
-    adddetail:{
-        height:50,
-        width:100,
-        justifyContent:"center",
-        fontSize:20,
-        fontWeight:"bold",
-        alignItems:"center",
-        borderRadius:20,
-        backgroundColor:"pink"
+    adddetail: {
+        height: 50,
+        width: 100,
+        justifyContent: "center",
+        fontSize: 20,
+        fontWeight: "bold",
+        alignItems: "center",
+        borderRadius: 20,
+        backgroundColor: "pink"
     },
-    containerimageate:{
-        flex: 1, 
-        flexDirection: "row", 
+    containerimageate: {
+        flex: 1,
+        flexDirection: "row",
         // justifyContent: 'space-around', 
 
-      },
+    },
     breakfast: {
-        marginRight:10,
+        marginRight: 10,
         marginTop: 5,
         fontWeight: "bold",
         color: "#D7385E",
         fontSize: 17,
-        fontFamily: 'Athiti'
-      },
-      lunch: {
-        marginRight:18,
-        marginTop: 5, 
-        fontWeight: "bold", 
-        color: "#D7385E", 
-        fontSize: 17, 
-        fontFamily: 'Athiti'
-      },
-      dinner: {
-        marginRight:12,
-        marginTop: 5, 
-        fontWeight: "bold", 
-        color: "#D7385E", 
-        fontSize: 17, 
-        fontFamily: 'Athiti'
-      },
+        // fontFamily: 'Athiti'
+    },
+    lunch: {
+        marginRight: 18,
+        marginTop: 5,
+        fontWeight: "bold",
+        color: "#D7385E",
+        fontSize: 17,
+        // fontFamily: 'Athiti'
+    },
+    dinner: {
+        marginRight: 12,
+        marginTop: 5,
+        fontWeight: "bold",
+        color: "#D7385E",
+        fontSize: 17,
+        // fontFamily: 'Athiti'
+    },
 });
 
 export default Home;

@@ -4,31 +4,31 @@ import { ScrollView, TextInput, TouchableOpacity } from "react-native-gesture-ha
 import { MaterialIcons } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
-import firebase from 'firebase'
+// import firebase from 'firebase'
 
 const Newsfeed = () => {
 
-  const [snap, setSnap] = useState()
+  // const [snap, setSnap] = useState()
 
-  const Test = async () => {
-    // const dbRef = firebase.firestore().collection('users')
-    // dbRef
-    //   .get()
-    //   .then(snapshot => {
-    //     snapshot
-    //       .docs
-    //       .forEach(doc => {
+  // const Test = async () => {
+  //   // const dbRef = firebase.firestore().collection('users')
+  //   // dbRef
+  //   //   .get()
+  //   //   .then(snapshot => {
+  //   //     snapshot
+  //   //       .docs
+  //   //       .forEach(doc => {
 
 
-    //         <Text>{JSON.parse(doc._document.fullName.toString())}</Text>
-    //       });
-    //   });
+  //   //         <Text>{JSON.parse(doc._document.fullName.toString())}</Text>
+  //   //       });
+  //   //   });
 
 
 
     
     
-  }
+  // }
 
 
 
@@ -38,7 +38,7 @@ const Newsfeed = () => {
     <ScrollView>
       <View style={{ backgroundColor: "#9100FF" }}>
         <View style={styles.header}>
-          <Text>{snap}</Text>
+
           <LinearGradient colors={['#ae1e1e', '#ff005f', '#ffcc00']}
             stops={[0, 35, 100]}
             style={styles.imagecolor} >
@@ -274,14 +274,14 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     color: "white",
     fontSize: 18,
-    fontFamily: 'Athiti'
+    // fontFamily: 'Athiti'
   },
   headershared: {
     marginTop: 5,
     fontWeight: "bold",
     color: "#707070",
     fontSize: 16,
-    fontFamily: 'Athiti'
+    // fontFamily: 'Athiti'
   },
   breakfast: {
     marginRight: 20,
@@ -289,7 +289,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     color: "#D7385E",
     fontSize: 16,
-    fontFamily: 'Athiti'
+    // fontFamily: 'Athiti'
   },
   lunch: {
     marginRight: 25,
@@ -298,7 +298,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     color: "#D7385E",
     fontSize: 16,
-    fontFamily: 'Athiti'
+    // fontFamily: 'Athiti'
   },
   dinner: {
     marginLeft: 10,
@@ -307,7 +307,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     color: "#D7385E",
     fontSize: 16,
-    fontFamily: 'Athiti'
+    // fontFamily: 'Athiti'
   },
   inputkcal: {
     width: "23%",
@@ -320,7 +320,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     color: "gray",
     fontSize: 16,
-    fontFamily: 'Athiti',
+    // fontFamily: 'Athiti',
     textAlign: "center"
   },
   line: {

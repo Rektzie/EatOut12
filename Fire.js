@@ -72,6 +72,8 @@ class Fire{
             
         }
 
+        
+
 }
 
 export default new Fire();
