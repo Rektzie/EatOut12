@@ -161,7 +161,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     color: "#707070",
     fontSize: 18,
-    fontFamily: 'Athiti'
+    // fontFamily: 'Athiti'
   },
   nameandemail: {
     marginTop: 5,
@@ -169,7 +169,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     color: "#707070",
     fontSize: 18,
-    fontFamily: 'Athiti',
+    // fontFamily: 'Athiti',
     lineHeight:25
   },
   inputnameandemail: {
@@ -192,7 +192,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     color: "#707070",
     fontSize: 18,
-    fontFamily: 'Athiti'
+    // fontFamily: 'Athiti'
   },
   inputage: {
     marginTop: 20,
@@ -210,7 +210,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     color: "#707070",
     fontSize: 18,
-    fontFamily: 'Athiti'
+    // fontFamily: 'Athiti'
   },
   inputbmi: {
     marginLeft: 20,
@@ -227,7 +227,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     color: "#707070",
     fontSize: 18,
-    fontFamily: 'Athiti'
+    // fontFamily: 'Athiti'
   },
   inputweight: {
     marginTop: 20,
@@ -245,7 +245,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     color: "#707070",
     fontSize: 18,
-    fontFamily: 'Athiti'
+    // fontFamily: 'Athiti'
   },
   inputheight: {
     marginTop: 20,
@@ -288,7 +288,7 @@ const styles = StyleSheet.create({
   //   fontWeight: "bold",
   //   color: "#707070",
   //   fontSize: 18,
-  //   fontFamily: 'Athiti'
+    // fontFamily: 'Athiti'
   // },
   inputgoal: {
     marginTop: 20,
@@ -312,7 +312,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     color: "white",
     fontSize: 18,
-    fontFamily: 'Athiti'
+    // fontFamily: 'Athiti'
   },
   containerprofileimageandedit: {
     justifyContent: "center",

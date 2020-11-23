@@ -11,7 +11,7 @@ export default function HomeScreen(props) {
     const [entityText, setEntityText] = useState('')
     const [entities, setEntities] = useState([])
 
-    const entityRef = firebase.firestore().collection('entities')
+    
     const userID = props.extraData.id
     const navigation = useNavigation();
 

@@ -6,6 +6,7 @@ import Streak from "../components/Streak"
 import * as ImagePicker from "expo-image-picker"
 import Constants from "expo-constants"
 import firebase from 'firebase'
+import Fire from '../../Fire';
 
 
 
@@ -24,6 +25,13 @@ const onSignOutButtonPressed = () => {
 const Home = (props) => {
 
 
+    var date = new Date().getDate();
+    var month = new Date().getMonth() + 1; //To get the Current Month
+    var year = new Date().getFullYear(); //To get the Current Year
+    const [today, setToday] = useState(date + '-' + month + '-' + year)
+    const userID = Fire.uid
+
+
 
 
     const [image1, setImage1] = useState(null)
@@ -34,7 +42,17 @@ const Home = (props) => {
     // const getCal = props.navigation.getParam("cal")
 
 
-
+    const getImageFromFirebase = (setImgFunc, meal) => {
+        const photoPath = userID + '/' + today + '/' + meal + '.png'
+        let imageRef = firebase.storage().ref(photoPath);
+        imageRef
+            .getDownloadURL()
+            .then((url) => {
+                //from url you can fetched the uploaded image easily
+                setImgFunc(url);
+            })
+            .catch((e) => console.log('getting downloadURL of image error => ', e));
+    }
 
 
     useEffect(() => {
@@ -46,8 +64,13 @@ const Home = (props) => {
                     alert('Sorry');
                 }
             }
+            getImageFromFirebase(setImage1, 'breakfast')
+            getImageFromFirebase(setImage2, 'lunch')
+            getImageFromFirebase(setImage3, 'dinner')
         }
         didMount()
+
+
     }, []);
 
     const pickImage = async (num) => {
@@ -207,7 +230,7 @@ const styles = StyleSheet.create({
         fontWeight: "bold",
         color: "#D7385E",
         fontSize: 17,
-        fontFamily: 'Athiti'
+        // fontFamily: 'Athiti'
     },
     lunch: {
         marginRight: 18,
@@ -215,7 +238,7 @@ const styles = StyleSheet.create({
         fontWeight: "bold",
         color: "#D7385E",
         fontSize: 17,
-        fontFamily: 'Athiti'
+        // fontFamily: 'Athiti'
     },
     dinner: {
         marginRight: 12,
@@ -223,7 +246,7 @@ const styles = StyleSheet.create({
         fontWeight: "bold",
         color: "#D7385E",
         fontSize: 17,
-        fontFamily: 'Athiti'
+        // fontFamily: 'Athiti'
     },
 });
 

@@ -20,6 +20,8 @@ const DetailImageScreen = (props) => {
     // const [savedTitle, setSavedTitle] = useState("")
     // const [savedDetail, setSavedDetail] = useState("")
 
+    
+
 
     const [title, setTitle] = useState("")
     const [cal, setCal] = useState("")
@@ -33,11 +35,24 @@ const DetailImageScreen = (props) => {
     const [today, setToday] = useState(date+'-'+ month+'-'+year)
     const [userID, setUserID] = useState(Fire.uid)
 
+    
+    function setFirebaseImageDetails(today, meal, docname, photoPath, title, cal, detail){
+        const meal_images_ref = firebase.firestore().collection('users').doc(userID).collection('meals_history')
+        const detailObj = {
+            image: photoPath,
+            title: title,
+            cal: cal,
+            detail: detail
+        }
+        meal_images_ref.doc(today).collection(meal).doc(docname).set(detailObj, {merge: true})
+    }
+
     const uploadImage = async () => {
         // setImage(img)
         // const filename = uri;
         const uploadUri = img.uri;
-
+        const photoPath = userID + '/' + today + '/' + meal + '.png'
+        
         setUploading(true);
         setTransferred(0);
         console.log(uploadUri)
@@ -45,11 +60,11 @@ const DetailImageScreen = (props) => {
         if (Platform.OS === 'ios') {
             const response = await fetch(uploadUri);
             const blob = await response.blob();
-            task = firebase.storage().ref(userID + '/' + today + '/' + meal + '.png').put(blob)
+            task = firebase.storage().ref(photoPath).put(blob)
         }
         else {
             task = firebase.storage()
-                .ref(userID + '/' + today + '/' + meal + '.png')
+                .ref(photoPath)
                 .putString(uploadUri, 'data_url');
         }
 
@@ -60,12 +75,19 @@ const DetailImageScreen = (props) => {
                 Math.round(snapshot.bytesTransferred / snapshot.totalBytes) * 10000
             );
         });
+        setFirebaseImageDetails(today, meal, 'meal_details', photoPath, title, cal, detail)
+
         try {
             await task();
         } catch (e) {
             console.error(e);
         }
+
+        
+
+        
         setUploading(false);
+
         Alert.alert(
             'Photo uploaded!',
             'Your photo has been uploaded to Firebase Cloud Storage!'
