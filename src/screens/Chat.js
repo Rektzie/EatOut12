@@ -18,6 +18,8 @@ export default class Chat extends React.Component  {
     }
   }
 
+
+
   componentDidMount(){
     const user = firebase.auth().currentUser
     const roomname = this.props.navigation.getParam('roomname')

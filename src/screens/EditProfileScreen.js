@@ -5,7 +5,7 @@ import { MaterialIcons } from '@expo/vector-icons';
 import firebase from 'firebase'
 import * as ImagePicker from "expo-image-picker"
 import { LinearGradient } from 'expo-linear-gradient';
-import { MaterialCommunityIcons } from '@expo/vector-icons'; 
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 // id: uid,
 // email,
 // fullName,
@@ -34,25 +34,24 @@ export default function EditProfileScreen(props) {
 
         const updateDBRef = firebase.firestore().collection('users').doc(uid)
         updateDBRef.set({
-            id: uid,
             email: userData.email,
             fullName: userData.fullName,
             age: userData.age,
             BMI: userData.BMI,
             weight: userData.weight,
             height: userData.height,
-        }).then((docRef) => {
-            setUserData(
-                {
+        }, { merge: true }).then((docRef) => {
+            // setUserData(
+            //     {
 
-                    email: user.email,
-                    fullName: user.fullName,
-                    age: user.age,
-                    BMI: user.BMI,
-                    weight: user.weight,
-                    height: user.height,
-                })
-            // props.navigation.pop();
+            //         email: user.email,
+            //         fullName: user.fullName,
+            //         age: user.age,
+            //         BMI: user.BMI,
+            //         weight: user.weight,
+            //         height: user.height,
+            //     })
+            props.navigation.popToTop();
         })
             .catch((error) => {
                 console.error("Error: ", error);
@@ -148,7 +147,7 @@ export default function EditProfileScreen(props) {
                         </View>
                     </View>
                     <View style={{ flex: 1 }}>
-                        <View style={{ flexDirection: "row", marginTop: 10,justifyContent:"center" }}>
+                        <View style={{ flexDirection: "row", marginTop: 10, justifyContent: "center" }}>
                             <Text style={styles.nameandemail}>Name</Text>
                             <TextInput
                                 paddingLeft={20}
@@ -158,7 +157,7 @@ export default function EditProfileScreen(props) {
                             ></TextInput>
                         </View>
 
-                        <View style={{ flexDirection: "row", marginTop: 15,justifyContent:"center" }}>
+                        <View style={{ flexDirection: "row", marginTop: 15, justifyContent: "center" }}>
                             <Text style={styles.nameandemail}>Email</Text>
                             <TextInput paddingLeft={20} style={styles.inputnameandemail} value={userData.email} onChangeText={text => setUserData({ ...userData, email: text })}></TextInput>
 
@@ -167,24 +166,24 @@ export default function EditProfileScreen(props) {
                         <View style={styles.line} />
 
 
-                <View style={{ flexDirection: "row" }}>
-                    <Text style={styles.age}>Age</Text>
-                    <TextInput paddingLeft={20} style={styles.inputage} value={userData.age} onChangeText={text => setUserData({ ...userData, age: text })}></TextInput>
-                    <View style={{ flexDirection: "row" }}>
-                        <Text style={styles.bmi}>BMI</Text>
-                        <TextInput paddingLeft={20} style={styles.inputbmi} value={userData.BMI} onChangeText={text => setUserData({ ...userData, BMI: text })}></TextInput>
-                    </View>
-                </View>
+                        <View style={{ flexDirection: "row" }}>
+                            <Text style={styles.age}>Age</Text>
+                            <TextInput paddingLeft={20} style={styles.inputage} value={userData.age} onChangeText={text => setUserData({ ...userData, age: text })}></TextInput>
+                            <View style={{ flexDirection: "row" }}>
+                                <Text style={styles.bmi}>BMI</Text>
+                                <TextInput paddingLeft={20} style={styles.inputbmi} value={userData.BMI} onChangeText={text => setUserData({ ...userData, BMI: text })}></TextInput>
+                            </View>
+                        </View>
 
-                <View style={{ flexDirection: "row" }}>
-                    <Text style={styles.weight}>Weight</Text>
-                    <TextInput paddingLeft={20} style={styles.inputweight} value={userData.weight} onChangeText={text => setUserData({ ...userData, weight: text })}></TextInput>
+                        <View style={{ flexDirection: "row" }}>
+                            <Text style={styles.weight}>Weight</Text>
+                            <TextInput paddingLeft={20} style={styles.inputweight} value={userData.weight} onChangeText={text => setUserData({ ...userData, weight: text })}></TextInput>
 
-                    <Text style={styles.height}>Height</Text>
-                    <TextInput paddingLeft={20} style={styles.inputheight} value={userData.height} onChangeText={text => setUserData({ ...userData, height: text })}></TextInput>
-                </View>
+                            <Text style={styles.height}>Height</Text>
+                            <TextInput paddingLeft={20} style={styles.inputheight} value={userData.height} onChangeText={text => setUserData({ ...userData, height: text })}></TextInput>
+                        </View>
 
-    
+
                         <View style={{ flex: 1 }}>
                             <TouchableOpacity style={styles.savebutton}
                                 onPress={() => updateUser()}
