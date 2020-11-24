@@ -71,52 +71,59 @@ const Newsfeed = () => {
 
       setPostList(postData)
     })
-  return () => { unsubscribe() }
+    return () => { unsubscribe() }
   })
 
 
   const renderItem = ({ item }) => {
 
-    var imgBreakfast
-    var imgLunch
-    var imgDinner
+    // var imgBreakfast
+    // var imgLunch
+    // var imgDinner
+    const user = firebase.firestore().collection('users').doc(item.id).get()
+    
 
-    const setVar = () => {
-      let photoPath1 = item.breakfast_image
-      let imageRef1 = firebase.storage().ref(photoPath1);
-      let photoPath2 = item.lunch_image
-      let imageRef2 = firebase.storage().ref(photoPath2);
-      let photoPath3 = item.dinner_image
-      let imageRef3 = firebase.storage().ref(photoPath3);
+    // const setVar = async () => {
+    //   let photoPath1 = item.breakfast_image
+    //   // let imageRef1 = firebase.storage().ref(photoPath1);
+    //   let photoPath2 = item.lunch_image
+    //   // let imageRef2 = firebase.storage().ref(photoPath2);
+    //   let photoPath3 = item.dinner_image
+    //   // let imageRef3 = firebase.storage().ref(photoPath3);
 
 
-      imageRef1
-        .getDownloadURL()
-        .then((url) => {
-          //from url you can fetched the uploaded image easily
-          imgBreakfast = url
-        })
-        // .catch((e) => console.log('getting downloadURL of image error => ', e));
+    //   imgBreakfast = await firebase.storage().ref(photoPath1).getDownloadURL();
+    //   imgLunch = await firebase.storage().ref(photoPath2).getDownloadURL();
+    //   imgDinner = await firebase.storage().ref(photoPath3).getDownloadURL();
 
-      imageRef2
-        .getDownloadURL()
-        .then((url) => {
-          //from url you can fetched the uploaded image easily
-          imgLunch = url
-        })
-        // .catch((e) => console.log('getting downloadURL of image error => ', e));
 
-      imageRef3
-        .getDownloadURL()
-        .then((url) => {
-          //from url you can fetched the uploaded image easily
-          imgDinner = url
-        })
-        // .catch((e) => console.log('getting downloadURL of image error => ', e));
+      // imageRef1
+      //   .getDownloadURL()
+      //   .then((url) => {
+      //     //from url you can fetched the uploaded image easily
+      //     imgBreakfast = url
+      //   })
+      //   // .catch((e) => console.log('getting downloadURL of image error => ', e));
 
-    }
+      // imageRef2
+      //   .getDownloadURL()
+      //   .then((url) => {
+      //     //from url you can fetched the uploaded image easily
+      //     imgLunch = url
+      //   })
+      //   // .catch((e) => console.log('getting downloadURL of image error => ', e));
 
-    setVar()
+      // imageRef3
+      //   .getDownloadURL()
+      //   .then((url) => {
+      //     //from url you can fetched the uploaded image easily
+      //     imgDinner = url
+      //   })
+      // .catch((e) => console.log('getting downloadURL of image error => ', e));
+
+    // }
+
+    // setVar()
 
 
 
@@ -128,7 +135,7 @@ const Newsfeed = () => {
       <View style={styles.header}>
         <View style={{ backgroundColor: "#9100FF" }}>
           <View style={styles.header}>
-
+<Text>{user.imageprofile}</Text>
             <LinearGradient colors={['#ae1e1e', '#ff005f', '#ffcc00']}
               stops={[0, 35, 100]}
               style={styles.imagecolor} >
@@ -166,17 +173,17 @@ const Newsfeed = () => {
             <Image style={{ width: 120, height: 90, }}
 
               source={{
-                uri: imgBreakfast,
+                uri: item.breakfast_image,
               }} />
             <Image style={{ width: 120, height: 90, }}
 
               source={{
-                uri: imgLunch,
+                uri: item.lunch_image,
               }} />
             <Image style={{ width: 120, height: 90, }}
 
               source={{
-                uri: imgDinner,
+                uri: item.dinner_image,
               }} />
 
           </View>
@@ -186,10 +193,10 @@ const Newsfeed = () => {
               <Text style={styles.textkcal}>{item.breakfast_cal}</Text>
             </TextInput>
             <TextInput style={styles.inputkcal}>
-              <Text style={styles.textkcal}>250 Kcal</Text>
+              <Text style={styles.textkcal}>{item.lunch_cal}</Text>
             </TextInput>
             <TextInput style={styles.inputkcal}>
-              <Text style={styles.textkcal}>250 Kcal</Text>
+              <Text style={styles.textkcal}>{item.dinner_cal}</Text>
             </TextInput>
           </View>
 
