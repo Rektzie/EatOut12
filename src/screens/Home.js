@@ -7,21 +7,6 @@ import * as ImagePicker from "expo-image-picker"
 import firebase from 'firebase'
 import Fire from '../../Fire';
 
-
-
-
-
-const onSignOutButtonPressed = () => {
-    // firebase.auth().signOut().then(function () {
-    // Sign-out successful.
-    firebase.auth()
-        .signOut()
-        .then(() => console.log('User signed out!'));
-}
-
-
-
-
 const Home = (props) => {
 
 
@@ -52,13 +37,22 @@ const Home = (props) => {
 
         // const posted = dailyRef.get()
         historyRef.onSnapshot((documentSnapshot) => {
-            // setDailyObject(documentSnapshot.data())
+            // 
             // console.log(dailyObject)
             // console.log(dailyObject.posted)
             let objData = [];
             documentSnapshot.forEach((doc) => objData.push({ ...doc.data(), id: doc.id }));
             // console.log({postData})
             setObjList(objData)
+            console.log("obj lists: ")
+            console.log(objList)
+        });
+
+        todayRef.onSnapshot((documentSnapshot) => {
+            // console.log(documentSnapshot.data())
+            setDailyObject(documentSnapshot.data())
+            console.log("daily obj: ")
+            console.log(dailyObject)
         });
     }
 
@@ -81,7 +75,6 @@ const Home = (props) => {
 
 
     useEffect(() => {
-        console.log('test')
         const didMount = async () => {
             if (Platform.OS !== 'web') {
                 const { status } = await ImagePicker.requestCameraRollPermissionsAsync();
@@ -93,8 +86,11 @@ const Home = (props) => {
             getImageFromFirebase(setImage2, 'lunch')
             getImageFromFirebase(setImage3, 'dinner')
             getDailyObject()
+
         }
         didMount()
+        console.log(objList)
+
 
 
     }, []);
@@ -106,7 +102,7 @@ const Home = (props) => {
             aspect: [4, 3],
             quality: 1
         })
-        console.log(result)
+
 
         if (!result.cancelled) {
             switch (num) {
@@ -133,7 +129,13 @@ const Home = (props) => {
 
     function setPosted() {
         const post_ref = firebase.firestore().collection('users').doc(userID).collection('meals_history').doc(today)
-        post_ref.set({ posted: true }, { merge: true })
+        const timestamp = firebase.firestore.FieldValue.serverTimestamp();
+        const post_list = firebase.firestore().collection('post_lists')
+
+
+        post_ref.set({ posted: true, createdAt: timestamp }, { merge: true })
+        post_list.doc(today+'_'+userID).set(dailyObject)
+
     }
 
 
@@ -142,7 +144,6 @@ const Home = (props) => {
 
             {
                 objList.map(each => {
-                    console.log(each.breakfast_image)
                     return (
                         <View style={styles.item}>
                             <Text style={styles.title}>{each.breakfast_image}</Text>
@@ -162,7 +163,7 @@ const Home = (props) => {
             </View> */}
             </View>
 
-            <Button title="Post" disabled={(!(image1 && image2 && image3 && dailyObject.posted === false))} onPress={() => setPosted()}></Button>
+            <Button title="Post" disabled={ dailyObject? dailyObject.posted === true && (!(image1 && image2 && image3)) : false } onPress={() => setPosted()}></Button>
 
 
             {/* <View style={styles.containerate}>

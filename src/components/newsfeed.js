@@ -1,10 +1,11 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Animated, StyleSheet, Text, View, Easing, Image, ImageBackground, Button } from "react-native";
-import { ScrollView, TextInput, TouchableOpacity } from "react-native-gesture-handler";
+import { FlatList, ScrollView, TextInput, TouchableOpacity } from "react-native-gesture-handler";
 import { MaterialIcons } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import firebase from 'firebase';
+
 
 const Newsfeed = () => {
 
@@ -26,213 +27,193 @@ const Newsfeed = () => {
 
 
 
-    
-    
+
+
   // }
 
+  var date = new Date().getDate();
+  var month = new Date().getMonth() + 1; //To get the Current Month
+  var year = new Date().getFullYear(); //To get the Current Year
+  const [today, setToday] = useState(date + '-' + month + '-' + year)
+  const userID = firebase.auth().currentUser.uid
+  const [postList, setPostList] = useState([])
+
+  const getDailyObject = () => {
+    const firebaseRef = firebase.firestore()
+    const post_list_ref = firebaseRef.collection('post_lists')
+
+    // const posted = dailyRef.get()
+    post_list_ref.onSnapshot((documentSnapshot) => {
+      // 
+      // console.log(dailyObject)
+      // console.log(dailyObject.posted)
+      let objData = [];
+      documentSnapshot.forEach((doc) => objData.push({ ...doc.data(), id: doc.id }));
+      // console.log({postData})
+      setPostList(objData)
+
+
+    });
+  }
+
+
+  useEffect(() => {
+    // const didMount = async () => {
+
+    //   await getDailyObject()
+    // }
+
+    // didMount()
+    const db = firebase.firestore().collection('post_lists')
+    const unsubscribe = db.onSnapshot((snapshot) => {
+      let postData = [];
+      snapshot.forEach((doc) => postData.push({ ...doc.data(), id: doc.id }));
+
+      setPostList(postData)
+    })
+  return () => { unsubscribe() }
+  })
+
+
+  const renderItem = ({ item }) => {
+
+    var imgBreakfast
+    var imgLunch
+    var imgDinner
+
+    const setVar = () => {
+      let photoPath1 = item.breakfast_image
+      let imageRef1 = firebase.storage().ref(photoPath1);
+      let photoPath2 = item.lunch_image
+      let imageRef2 = firebase.storage().ref(photoPath2);
+      let photoPath3 = item.dinner_image
+      let imageRef3 = firebase.storage().ref(photoPath3);
+
+
+      imageRef1
+        .getDownloadURL()
+        .then((url) => {
+          //from url you can fetched the uploaded image easily
+          imgBreakfast = url
+        })
+        // .catch((e) => console.log('getting downloadURL of image error => ', e));
+
+      imageRef2
+        .getDownloadURL()
+        .then((url) => {
+          //from url you can fetched the uploaded image easily
+          imgLunch = url
+        })
+        // .catch((e) => console.log('getting downloadURL of image error => ', e));
+
+      imageRef3
+        .getDownloadURL()
+        .then((url) => {
+          //from url you can fetched the uploaded image easily
+          imgDinner = url
+        })
+        // .catch((e) => console.log('getting downloadURL of image error => ', e));
+
+    }
+
+    setVar()
+
+
+
+
+
+
+
+    return (
+      <View style={styles.header}>
+        <View style={{ backgroundColor: "#9100FF" }}>
+          <View style={styles.header}>
+
+            <LinearGradient colors={['#ae1e1e', '#ff005f', '#ffcc00']}
+              stops={[0, 35, 100]}
+              style={styles.imagecolor} >
+              <Image style={styles.imageprofile}
+
+                source={{
+                  uri: 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a1/Beauty_girl.jpg/499px-Beauty_girl.jpg',
+                }}
+              />
+            </LinearGradient>
+            {/* <Button
+            title="test"
+            onPress={() => Test()}
+          >
+          </Button> */}
+            <Text style={styles.headertextname}>
+              Ploy.sucha
+        </Text>
+            <View style={{ flexDirection: "row", marginLeft: 15 }}>
+              <AntDesign name="wechat" size={40} color="#B0CDF6" />
+            </View>
+
+          </View>
+        </View>
+        <View style={{ flexDirection: "column" }}>
+          <View style={{ flexDirection: "row", margin: 10 }}>
+            <Text style={styles.headershared}>Ploy.sucha Shared Total Ate 1020 Kcal</Text>
+          </View>
+          <View style={styles.containerate}>
+            <Text style={styles.breakfast}>Breakfast</Text>
+            <Text style={styles.lunch}>Lunch</Text>
+            <Text style={styles.dinner}>Dinner</Text>
+          </View>
+          <View style={styles.containerimageate}>
+            <Image style={{ width: 120, height: 90, }}
+
+              source={{
+                uri: imgBreakfast,
+              }} />
+            <Image style={{ width: 120, height: 90, }}
+
+              source={{
+                uri: imgLunch,
+              }} />
+            <Image style={{ width: 120, height: 90, }}
+
+              source={{
+                uri: imgDinner,
+              }} />
+
+          </View>
+
+          <View style={styles.containerkcal}>
+            <TextInput style={styles.inputkcal}>
+              <Text style={styles.textkcal}>{item.breakfast_cal}</Text>
+            </TextInput>
+            <TextInput style={styles.inputkcal}>
+              <Text style={styles.textkcal}>250 Kcal</Text>
+            </TextInput>
+            <TextInput style={styles.inputkcal}>
+              <Text style={styles.textkcal}>250 Kcal</Text>
+            </TextInput>
+          </View>
+
+
+        </View>
+
+        <View style={styles.line} />
+      </View>
+    )
+
+  }
 
 
 
 
   return (
     <ScrollView>
-      <View style={{ backgroundColor: "#9100FF" }}>
-        <View style={styles.header}>
-
-          <LinearGradient colors={['#ae1e1e', '#ff005f', '#ffcc00']}
-            stops={[0, 35, 100]}
-            style={styles.imagecolor} >
-            <Image style={styles.imageprofile}
-
-              source={{
-                uri: 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a1/Beauty_girl.jpg/499px-Beauty_girl.jpg',
-              }}
-            />
-          </LinearGradient>
-          {/* <Button
-            title="test"
-            onPress={() => Test()}
-          >
-          </Button> */}
-          <Text style={styles.headertextname}>
-            Ploy.sucha
-        </Text>
-          <View style={{ flexDirection: "row", marginLeft: 15 }}>
-            <AntDesign name="wechat" size={40} color="#B0CDF6" />
-          </View>
-
-        </View>
-      </View>
-      <View style={{ flexDirection: "column" }}>
-        <View style={{ flexDirection: "row", margin: 10 }}>
-          <Text style={styles.headershared}>Ploy.sucha Shared Total Ate 1020 Kcal</Text>
-        </View>
-        <View style={styles.containerate}>
-          <Text style={styles.breakfast}>Breakfast</Text>
-          <Text style={styles.lunch}>Lunch</Text>
-          <Text style={styles.dinner}>Dinner</Text>
-        </View>
-        <View style={styles.containerimageate}>
-          <Image style={{ width: 120, height: 90, }}
-
-            source={{
-              uri: 'https://images.squarespace-cdn.com/content/v1/5c271646f8370a65dab2c142/1575302182439-TDG6EMNNP6WS6ZH0RR9K/ke17ZwdGBToddI8pDm48kNiEM88mrzHRsd1mQ3bxVct7gQa3H78H3Y0txjaiv_0fDoOvxcdMmMKkDsyUqMSsMWxHk725yiiHCCLfrh8O1z4YTzHvnKhyp6Da-NYroOW3ZGjoBKy3azqku80C789l0s0XaMNjCqAzRibjnE_wBlkZ2axuMlPfqFLWy-3Tjp4nKScCHg1XF4aLsQJlo6oYbA/IMG_9041+copy.jpg',
-            }} />
-          <Image style={{ width: 120, height: 90, }}
-
-            source={{
-              uri: 'https://images.squarespace-cdn.com/content/v1/5c271646f8370a65dab2c142/1575302182439-TDG6EMNNP6WS6ZH0RR9K/ke17ZwdGBToddI8pDm48kNiEM88mrzHRsd1mQ3bxVct7gQa3H78H3Y0txjaiv_0fDoOvxcdMmMKkDsyUqMSsMWxHk725yiiHCCLfrh8O1z4YTzHvnKhyp6Da-NYroOW3ZGjoBKy3azqku80C789l0s0XaMNjCqAzRibjnE_wBlkZ2axuMlPfqFLWy-3Tjp4nKScCHg1XF4aLsQJlo6oYbA/IMG_9041+copy.jpg',
-            }} />
-          <Image style={{ width: 120, height: 90, }}
-
-            source={{
-              uri: 'https://images.squarespace-cdn.com/content/v1/5c271646f8370a65dab2c142/1575302182439-TDG6EMNNP6WS6ZH0RR9K/ke17ZwdGBToddI8pDm48kNiEM88mrzHRsd1mQ3bxVct7gQa3H78H3Y0txjaiv_0fDoOvxcdMmMKkDsyUqMSsMWxHk725yiiHCCLfrh8O1z4YTzHvnKhyp6Da-NYroOW3ZGjoBKy3azqku80C789l0s0XaMNjCqAzRibjnE_wBlkZ2axuMlPfqFLWy-3Tjp4nKScCHg1XF4aLsQJlo6oYbA/IMG_9041+copy.jpg',
-            }} />
-
-        </View>
-
-        <View style={styles.containerkcal}>
-          <TextInput style={styles.inputkcal}>
-            <Text style={styles.textkcal}>320 Kcal</Text>
-          </TextInput>
-          <TextInput style={styles.inputkcal}>
-            <Text style={styles.textkcal}>250 Kcal</Text>
-          </TextInput>
-          <TextInput style={styles.inputkcal}>
-            <Text style={styles.textkcal}>250 Kcal</Text>
-          </TextInput>
-        </View>
+      <FlatList
+        data={postList}
+        renderItem={renderItem}
+        keyExtractor={item => item.id}
+      />
 
 
-      </View>
-
-      <View style={styles.line} />
-
-
-
-      <View style={{ backgroundColor: "#9100FF", marginTop: 10 }}>
-        <View style={styles.header}>
-          <LinearGradient colors={['#ae1e1e', '#ff005f', '#ffcc00']} style={styles.imagecolor} >
-            <Image style={styles.imageprofile}
-
-              source={{
-                uri: 'https://www.eurotimes.org/wp-content/uploads/2020/03/mona-lisa-with-face-mask-3957982-e1584612250409-1024x717.jpg',
-              }}
-            />
-          </LinearGradient>
-          <Text style={styles.headertextname}>
-            ramon_lisa
-        </Text>
-          <View style={{ flexDirection: "row", marginLeft: 15 }}>
-            <AntDesign name="wechat" size={40} color="#B0CDF6" />
-          </View>
-        </View>
-      </View>
-      <View style={{ flexDirection: "column" }}>
-        <View style={{ flexDirection: "row", margin: 10 }}>
-          <Text style={styles.headershared}>ramon_lisa Shared Eating Activities</Text>
-        </View>
-        <View style={styles.containerate}>
-          <Text style={styles.breakfast}>Breakfast</Text>
-          <Text style={styles.lunch}>Lunch</Text>
-          <Text style={styles.dinner}>Dinner</Text>
-        </View>
-        <View style={styles.containerimageate}>
-          <Image style={{ width: 120, height: 90, }}
-            source={{
-              uri: 'https://images.squarespace-cdn.com/content/v1/5c271646f8370a65dab2c142/1570548842579-GA58PSS6CIUIDIBFPELH/ke17ZwdGBToddI8pDm48kMFiMyT1nneRMhnmfuSfpxZ7gQa3H78H3Y0txjaiv_0fDoOvxcdMmMKkDsyUqMSsMWxHk725yiiHCCLfrh8O1z4YTzHvnKhyp6Da-NYroOW3ZGjoBKy3azqku80C789l0mlM0or4nqX7jrn5yWu0hA1QXedaIFqnAbw_tQShHbKg4-O_KAc44ak5jGzrnn7f3A/IMG_9286.jpg',
-            }} />
-          <Image style={{ width: 120, height: 90, }}
-
-            source={{
-              uri: 'https://images.squarespace-cdn.com/content/v1/5c271646f8370a65dab2c142/1570548842579-GA58PSS6CIUIDIBFPELH/ke17ZwdGBToddI8pDm48kMFiMyT1nneRMhnmfuSfpxZ7gQa3H78H3Y0txjaiv_0fDoOvxcdMmMKkDsyUqMSsMWxHk725yiiHCCLfrh8O1z4YTzHvnKhyp6Da-NYroOW3ZGjoBKy3azqku80C789l0mlM0or4nqX7jrn5yWu0hA1QXedaIFqnAbw_tQShHbKg4-O_KAc44ak5jGzrnn7f3A/IMG_9286.jpg',
-            }} />
-          <Image style={{ width: 120, height: 90, }}
-
-            source={{
-              uri: 'https://images.squarespace-cdn.com/content/v1/5c271646f8370a65dab2c142/1570548842579-GA58PSS6CIUIDIBFPELH/ke17ZwdGBToddI8pDm48kMFiMyT1nneRMhnmfuSfpxZ7gQa3H78H3Y0txjaiv_0fDoOvxcdMmMKkDsyUqMSsMWxHk725yiiHCCLfrh8O1z4YTzHvnKhyp6Da-NYroOW3ZGjoBKy3azqku80C789l0mlM0or4nqX7jrn5yWu0hA1QXedaIFqnAbw_tQShHbKg4-O_KAc44ak5jGzrnn7f3A/IMG_9286.jpg',
-            }} />
-
-        </View>
-
-        <View style={styles.containerkcal}>
-          <TextInput style={styles.inputkcal}>
-            <Text style={styles.textkcal}>320 Kcal</Text>
-          </TextInput>
-          <TextInput style={styles.inputkcal}>
-            <Text style={styles.textkcal}>250 Kcal</Text>
-          </TextInput>
-          <TextInput style={styles.inputkcal}>
-            <Text style={styles.textkcal}>250 Kcal</Text>
-          </TextInput>
-        </View>
-
-
-      </View>
-
-      <View style={styles.line} />
-
-      <View style={{ backgroundColor: "#9100FF", marginTop: 10 }}>
-        <View style={styles.header}>
-          <LinearGradient colors={['#ae1e1e', '#ff005f', '#ffcc00']} style={styles.imagecolor} >
-            <Image style={styles.imageprofile}
-
-              source={{
-                uri: 'https://i.pinimg.com/originals/cb/44/fd/cb44fde77872ff9f9e37a2ed89c6e284.jpg',
-              }}
-            />
-          </LinearGradient>
-          <Text style={styles.headertextname}>
-            Schhh.non
-        </Text>
-          <View style={{ flexDirection: "row", marginLeft: 15 }}>
-            <AntDesign name="wechat" size={40} color="#B0CDF6" />
-          </View>
-        </View>
-      </View>
-      <View style={{ flexDirection: "column" }}>
-        <View style={{ flexDirection: "row", margin: 10 }}>
-          <Text style={styles.headershared}>Schhh.non Shared Eating Activities</Text>
-        </View>
-        <View style={styles.containerate}>
-          <Text style={styles.breakfast}>Breakfast</Text>
-          <Text style={styles.lunch}>Lunch</Text>
-          <Text style={styles.dinner}>Dinner</Text>
-        </View>
-        <View style={styles.containerimageate}>
-          <Image style={{ width: 120, height: 90, }}
-            source={{
-              uri: 'https://images.squarespace-cdn.com/content/v1/5c271646f8370a65dab2c142/1570545947530-AZUYMEMWKU2D47HKOEKS/ke17ZwdGBToddI8pDm48kMFiMyT1nneRMhnmfuSfpxZ7gQa3H78H3Y0txjaiv_0fDoOvxcdMmMKkDsyUqMSsMWxHk725yiiHCCLfrh8O1z4YTzHvnKhyp6Da-NYroOW3ZGjoBKy3azqku80C789l0mlM0or4nqX7jrn5yWu0hA1QXedaIFqnAbw_tQShHbKg4-O_KAc44ak5jGzrnn7f3A/IMG_8179.jpg',
-            }} />
-          <Image style={{ width: 120, height: 90, }}
-
-            source={{
-              uri: 'https://images.squarespace-cdn.com/content/v1/5c271646f8370a65dab2c142/1570545947530-AZUYMEMWKU2D47HKOEKS/ke17ZwdGBToddI8pDm48kMFiMyT1nneRMhnmfuSfpxZ7gQa3H78H3Y0txjaiv_0fDoOvxcdMmMKkDsyUqMSsMWxHk725yiiHCCLfrh8O1z4YTzHvnKhyp6Da-NYroOW3ZGjoBKy3azqku80C789l0mlM0or4nqX7jrn5yWu0hA1QXedaIFqnAbw_tQShHbKg4-O_KAc44ak5jGzrnn7f3A/IMG_8179.jpg',
-            }} />
-          <Image style={{ width: 120, height: 90, }}
-
-            source={{
-              uri: 'https://images.squarespace-cdn.com/content/v1/5c271646f8370a65dab2c142/1570545947530-AZUYMEMWKU2D47HKOEKS/ke17ZwdGBToddI8pDm48kMFiMyT1nneRMhnmfuSfpxZ7gQa3H78H3Y0txjaiv_0fDoOvxcdMmMKkDsyUqMSsMWxHk725yiiHCCLfrh8O1z4YTzHvnKhyp6Da-NYroOW3ZGjoBKy3azqku80C789l0mlM0or4nqX7jrn5yWu0hA1QXedaIFqnAbw_tQShHbKg4-O_KAc44ak5jGzrnn7f3A/IMG_8179.jpg',
-            }} />
-
-        </View>
-
-        <View style={styles.containerkcal}>
-          <TextInput style={styles.inputkcal}>
-            <Text style={styles.textkcal}>320 Kcal</Text>
-          </TextInput>
-          <TextInput style={styles.inputkcal}>
-            <Text style={styles.textkcal}>250 Kcal</Text>
-          </TextInput>
-          <TextInput style={styles.inputkcal}>
-            <Text style={styles.textkcal}>250 Kcal</Text>
-          </TextInput>
-        </View>
-
-
-      </View>
-
-      <View style={styles.line} />
 
     </ScrollView>
 

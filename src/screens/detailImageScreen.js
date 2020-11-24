@@ -38,6 +38,7 @@ const DetailImageScreen = (props) => {
     
     function setFirebaseImageDetails(today, meal, docname, photoPath, title, cal, detail){
         const meal_images_ref = firebase.firestore().collection('users').doc(userID).collection('meals_history')
+        
         const detailObj = {
             [meal+'_image']: photoPath,
             [meal+'_title']: title,

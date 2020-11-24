@@ -83,12 +83,12 @@ const Chat = () => {
   return (
     <View style={styles.layout}>
       <SafeAreaView style={styles.container}>
-        {/* <FlatList
+        <FlatList
           data={DATA}
           renderItem={renderItem}
           keyExtractor={item => item.fullName}
-        /> */}
-        {
+        />
+
           posts.map(user => {
             console.log(user.fullName)
             return (
