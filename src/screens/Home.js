@@ -4,9 +4,9 @@ import { Animated, StyleSheet, Text, View, Button, Image, Platform, TouchableOpa
 import CaloriesBurned from "../components/CaloriesBurned"
 import Streak from "../components/Streak"
 import * as ImagePicker from "expo-image-picker"
-import Constants from "expo-constants"
 import firebase from 'firebase'
 import Fire from '../../Fire';
+
 
 
 
@@ -40,11 +40,34 @@ const Home = (props) => {
     const title = props.navigation.getParam("title")
     const detail = props.navigation.getParam("detail")
     // const getCal = props.navigation.getParam("cal")
+    const [dailyObject, setDailyObject] = useState({})
+    const [objList, setObjList] = useState([])
+
+
+
+    const getDailyObject = () => {
+        const firebaseRef = firebase.firestore()
+        const historyRef = firebaseRef.collection('users').doc(userID).collection('meals_history')
+        const todayRef = historyRef.doc(today)
+
+        // const posted = dailyRef.get()
+        historyRef.onSnapshot((documentSnapshot) => {
+            // setDailyObject(documentSnapshot.data())
+            // console.log(dailyObject)
+            // console.log(dailyObject.posted)
+            let objData = [];
+            documentSnapshot.forEach((doc) => objData.push({ ...doc.data(), id: doc.id }));
+            // console.log({postData})
+            setObjList(objData)
+        });
+    }
 
 
     const getImageFromFirebase = (setImgFunc, meal) => {
         const photoPath = userID + '/' + today + '/' + meal + '.png'
         let imageRef = firebase.storage().ref(photoPath);
+
+
         imageRef
             .getDownloadURL()
             .then((url) => {
@@ -52,6 +75,8 @@ const Home = (props) => {
                 setImgFunc(url);
             })
             .catch((e) => console.log('getting downloadURL of image error => ', e));
+
+
     }
 
 
@@ -67,6 +92,7 @@ const Home = (props) => {
             getImageFromFirebase(setImage1, 'breakfast')
             getImageFromFirebase(setImage2, 'lunch')
             getImageFromFirebase(setImage3, 'dinner')
+            getDailyObject()
         }
         didMount()
 
@@ -86,15 +112,15 @@ const Home = (props) => {
             switch (num) {
                 case 1:
                     setImage1(result.uri)
-                    props.navigation.navigate("DetailImage", { img: result, meal: 'breakfast' })
+                    props.navigation.navigate("DetailImage", { img: result.uri, meal: 'breakfast' })
                     break
                 case 2:
                     setImage2(result.uri)
-                    props.navigation.navigate("DetailImage", { img: result, meal: 'lunch' })
+                    props.navigation.navigate("DetailImage", { img: result.uri, meal: 'lunch' })
                     break
                 case 3:
                     setImage3(result.uri)
-                    props.navigation.navigate("DetailImage", { img: result, meal: 'dinner' })
+                    props.navigation.navigate("DetailImage", { img: result.uri, meal: 'dinner' })
 
                     break
 
@@ -105,10 +131,25 @@ const Home = (props) => {
         }
     }
 
+    function setPosted() {
+        const post_ref = firebase.firestore().collection('users').doc(userID).collection('meals_history').doc(today)
+        post_ref.set({ posted: true }, { merge: true })
+    }
+
 
     return (
         <View style={{ flex: 2 }}>
 
+            {
+                objList.map(each => {
+                    console.log(each.breakfast_image)
+                    return (
+                        <View style={styles.item}>
+                            <Text style={styles.title}>{each.breakfast_image}</Text>
+                        </View>
+                    )
+                })
+            }
 
             <View style={{ flex: 2 }}>
                 {/* <View style={{ flexDirection: 'row' }}>
@@ -120,6 +161,8 @@ const Home = (props) => {
                 <Streak />
             </View> */}
             </View>
+
+            <Button title="Post" disabled={(!(image1 && image2 && image3 && dailyObject.posted === false))} onPress={() => setPosted()}></Button>
 
 
             {/* <View style={styles.containerate}>

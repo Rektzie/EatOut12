@@ -39,18 +39,19 @@ const DetailImageScreen = (props) => {
     function setFirebaseImageDetails(today, meal, docname, photoPath, title, cal, detail){
         const meal_images_ref = firebase.firestore().collection('users').doc(userID).collection('meals_history')
         const detailObj = {
-            image: photoPath,
-            title: title,
-            cal: cal,
-            detail: detail
+            [meal+'_image']: photoPath,
+            [meal+'_title']: title,
+            [meal+'_cal']: cal,
+            [meal+'_detail']: detail,
+            posted: false
         }
-        meal_images_ref.doc(today).collection(meal).doc(docname).set(detailObj, {merge: true})
+        meal_images_ref.doc(today).set(detailObj, {merge: true})
     }
 
     const uploadImage = async () => {
         // setImage(img)
         // const filename = uri;
-        const uploadUri = img.uri;
+        const uploadUri = img;
         const photoPath = userID + '/' + today + '/' + meal + '.png'
         
         setUploading(true);
@@ -98,7 +99,7 @@ const DetailImageScreen = (props) => {
         <View style={styles.container}>
             <Image
                 style={styles.img}
-                source={img ? { uri: img.uri } : require('../../assets/photo.png')} />
+                source={img ? { uri: img } : require('../../assets/photo.png')} />
             <Text
                 style={styles.text}
 
