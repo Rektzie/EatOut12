@@ -1,5 +1,19 @@
 import React from "react"
-import { View, Image, StyleSheet, TouchableOpacity ,Text, TextInput, Button, Platform, Alert, Keyboard, TouchableWithoutFeedback, TouchableOpacityBase, } from 'react-native';
+import {
+    View,
+    Image,
+    StyleSheet,
+    TouchableOpacity,
+    Text,
+    TextInput,
+    Button,
+    Platform,
+    Alert,
+    Keyboard,
+    TouchableWithoutFeedback,
+    TouchableOpacityBase,
+    ActivityIndicator
+} from 'react-native';
 import { useEffect, useState } from 'react';
 import firebase from 'firebase'
 import Fire from '../../Fire'
@@ -12,6 +26,7 @@ const DetailImageScreen = (props) => {
     // const [ imageName, setImageName ] = useState('')
     // const [ uploadUri, setUploadUri ] = useState('')
     const img = props.navigation.getParam("img")
+    const repast = props.navigation.getParam("repast")
     const meal = props.navigation.getParam("meal")
     // const gettitle = props.navigation.getParam("title")
     // const getdetail = props.navigation.getParam("detail")
@@ -35,10 +50,34 @@ const DetailImageScreen = (props) => {
     const [today, setToday] = useState(date + '-' + month + '-' + year)
     const [userID, setUserID] = useState(Fire.uid)
 
+    useEffect(() => {
+        const didMount = async () => {
+            const db = firebase.firestore()
+            const auth = firebase.auth()
+            const ref = db
+                .collection('users')
+                .doc(auth.currentUser.uid)
+                .collection('meals_history')
+                .doc(today)
+            const doc = await ref.get()
+            if (doc.exists) {
+                const repast_name = (repast === 1
+                    ? 'breakfast'
+                    : repast === 2
+                    ? 'lunch'
+                    : 'dinner')
+                setCal(doc.data()[repast_name + '_cal'])
+                setTitle(doc.data()[repast_name + '_title'])
+                setDetail(doc.data()[repast_name + '_detail'])
+            }
+        }
+        didMount()
+    }, [])
 
-    function setFirebaseImageDetails(today, meal, docname, photoPath, title, cal, detail) {
+
+    async function setFirebaseImageDetails(today, meal, docname, photoPath, title, cal, detail) {
         const meal_images_ref = firebase.firestore().collection('users').doc(userID).collection('meals_history')
-        
+
         const detailObj = {
             [meal + '_image']: photoPath,
             [meal + '_title']: title,
@@ -46,7 +85,7 @@ const DetailImageScreen = (props) => {
             [meal + '_detail']: detail,
             posted: false
         }
-        meal_images_ref.doc(today).set(detailObj, { merge: true })
+        await meal_images_ref.doc(today).set(detailObj, { merge: true })
     }
 
     const uploadImage = async () => {
@@ -58,34 +97,25 @@ const DetailImageScreen = (props) => {
         setUploading(true);
         setTransferred(0);
         console.log(uploadUri)
-        let task
         if (Platform.OS === 'ios') {
             const response = await fetch(uploadUri);
             const blob = await response.blob();
-            task = firebase.storage().ref(photoPath).put(blob)
+            await firebase.storage().ref(photoPath).put(blob)
         }
         else {
-            task = firebase.storage()
+            await firebase.storage()
                 .ref(photoPath)
                 .putString(uploadUri, 'data_url');
         }
 
         // set progress state
-        task.on('state_changed', snapshot => {
-            // console.log(Math.round(snapshot.bytesTransferred / snapshot.totalBytes) * 10000)
-            setTransferred(
-                Math.round(snapshot.bytesTransferred / snapshot.totalBytes) * 10000
-            );
-        });
-        setFirebaseImageDetails(today, meal, 'meal_details', photoPath, title, cal, detail)
-
-        try {
-            await task();
-        } catch (e) {
-            console.error(e);
-        }
-
-
+        // task.on('state_changed', snapshot => {
+        //     // console.log(Math.round(snapshot.bytesTransferred / snapshot.totalBytes) * 10000)
+        //     setTransferred(
+        //         Math.round(snapshot.bytesTransferred / snapshot.totalBytes) * 10000
+        //     );
+        // });
+        await setFirebaseImageDetails(today, meal, 'meal_details', photoPath, title, cal, detail)
 
 
         setUploading(false);
@@ -100,55 +130,59 @@ const DetailImageScreen = (props) => {
         <TouchableWithoutFeedback onPress={() => {
             Keyboard.dismiss();
         }}>
-        <View style={styles.container}>
-            <View style={styles.containerall}>
-                < Image
-                    style={styles.img}
-                    source={img ? { uri: img } : require('../../assets/photo.png')} />
+            <View style={styles.container}>
+                <View style={styles.containerall}>
+                    < Image
+                        style={styles.img}
+                        source={img ? { uri: img } : require('../../assets/photo.png')} />
+                </View>
+                <View style={styles.containerall}>
+                    <View style={{ flexDirection: "row", marginTop: 15 }}>
+                        <Text
+                            style={styles.text}
+                        >ชื่ออาหาร : </Text>
+                        <TextInput style={styles.input}
+                            value={title} paddingLeft={20}
+                            onChangeText={(text) => setTitle(text)}
+                        ></TextInput></View>
+                    <View style={{ flexDirection: "row" }}>
+                        <Text
+                            style={styles.textkcal}
+                        >Kcal : </Text>
+                        <TextInput style={styles.inputkcal} paddingLeft={20}
+                            value={cal}
+                            onChangeText={(text) => setCal(text)}
+                        ></TextInput></View>
+                    <View style={{ flexDirection: "row" }}>
+                        <Text style={styles.text}>คำอธิบาย : </Text>
+                        <TextInput style={styles.input} paddingLeft={20} paddingTop={10}
+                            multiline={true}
+                            numberOfLines={4}
+                            value={detail}
+                            onChangeText={(text) => setDetail(text)}
+                        ></TextInput></View>
+                </View>
+
+
+                <View style={{ marginTop: 20, alignItems: "center" }}>
+                    <TouchableOpacity disabled={uploading} style={styles.button} onPress={async () => { await uploadImage(); props.navigation.popToTop({ title: title, detail: detail, cal: cal }) }}>
+                        {
+                            uploading
+                            ? <ActivityIndicator size="large" />
+                            : <Text style={{ color: "white", fontSize: 18 }}>Save</Text>
+                        }
+                    </TouchableOpacity>
+                </View>
             </View>
-            <View style={styles.containerall}>
-                <View style={{ flexDirection: "row", marginTop:15 }}>
-                    <Text
-                        style={styles.text}
-                    >ชื่ออาหาร : </Text>
-                    <TextInput style={styles.input}
-                        value={title} paddingLeft={20}
-                        onChangeText={(text) => setTitle(text)}
-                    ></TextInput></View>
-            <View style={{ flexDirection: "row" }}>
-            <Text 
-                style={styles.textkcal}
-            >Kcal : </Text>
-            <TextInput style={styles.inputkcal} paddingLeft={20} 
-                value={cal}
-                onChangeText={(text) => setCal(text)}
-            ></TextInput></View>
-            <View style={{ flexDirection: "row" }}>
-            <Text style={styles.text}>คำอธิบาย : </Text>
-            <TextInput style={styles.input} paddingLeft={20} paddingTop={10}
-                multiline={true}
-                numberOfLines={4}
-                value={detail}
-                onChangeText={(text) => setDetail(text)}
-            ></TextInput></View>
-            </View>
-            
-            
-            <View style={{marginTop:20, alignItems:"center"}}>
-            <TouchableOpacity style={styles.button} onPress={() => { uploadImage(); props.navigation.popToTop({ title: title, detail: detail, cal: cal }) }}>
-                <Text style={{color:"white", fontSize:18}}>Save</Text>
-            </TouchableOpacity>
-            </View>
-        </View>
         </TouchableWithoutFeedback>
-            //          <Button
-            //     title="save"
-            //     style={styles.text}
+        //          <Button
+        //     title="save"
+        //     style={styles.text}
 
-            //     onPress={() => { uploadImage(); props.navigation.popToTop({ title: title, detail: detail, cal: cal }) }}
+        //     onPress={() => { uploadImage(); props.navigation.popToTop({ title: title, detail: detail, cal: cal }) }}
 
 
-            // /> 
+        // /> 
     )
 }
 
@@ -163,18 +197,18 @@ const styles = StyleSheet.create({
         width: 300,
         height: 300,
         margin: 20,
-        marginTop:40
+        marginTop: 40
 
 
     },
-    inputkcal:{
+    inputkcal: {
         width: "50%",
         height: 38,
         borderWidth: 0.5,
         borderColor: "#707070",
         borderRadius: 20,
-        marginBottom:20,
-        marginLeft:40
+        marginBottom: 20,
+        marginLeft: 40
     },
     container: {
         width: '100%',
@@ -185,13 +219,13 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         fontSize: 17,
         margin: 10,
-        lineHeight:20
+        lineHeight: 20
     },
     textkcal: {
         fontWeight: 'bold',
         fontSize: 17,
-        lineHeight:36,
-        marginLeft:10
+        lineHeight: 36,
+        marginLeft: 10
     },
     input: {
         width: "50%",
@@ -199,15 +233,15 @@ const styles = StyleSheet.create({
         borderWidth: 0.5,
         borderColor: "#707070",
         borderRadius: 20,
-        marginBottom:20
+        marginBottom: 20
     },
-    button:{
-        width:160,
-        borderRadius:20,
-        height:55,
-        backgroundColor:"#0087FF",
-        alignItems:"center",
-        justifyContent:"center"        
+    button: {
+        width: 160,
+        borderRadius: 20,
+        height: 55,
+        backgroundColor: "#0087FF",
+        alignItems: "center",
+        justifyContent: "center"
     }
 })
 

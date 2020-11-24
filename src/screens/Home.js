@@ -134,10 +134,11 @@ const Home = (props) => {
 
 
         post_ref.set({ posted: true, createdAt: timestamp }, { merge: true })
-        post_list.doc(today+'_'+userID).set(dailyObject)
+        post_list.doc(today + '_' + userID).set(dailyObject)
 
     }
 
+    console.log({ title })
 
     return (
         <View style={{ flex: 2 }}>
@@ -163,7 +164,7 @@ const Home = (props) => {
             </View> */}
             </View>
 
-            <Button title="Post" disabled={ dailyObject? dailyObject.posted === true && (!(image1 && image2 && image3)) : false } onPress={() => setPosted()}></Button>
+            <Button title="Post" disabled={dailyObject ? dailyObject.posted === true && (!(image1 && image2 && image3)) : false} onPress={() => setPosted()}></Button>
 
 
             {/* <View style={styles.containerate}>
@@ -196,7 +197,10 @@ const Home = (props) => {
                             source={image1 ? { uri: image1 } : require('../../assets/photo.png')} />
 
 
-                        <TouchableOpacity style={styles.adddetail} onPress={() => props.navigation.navigate("DetailImage", { title: title, detail: detail })}>
+                        <TouchableOpacity style={styles.adddetail} onPress={() =>
+                            props.navigation.navigate("DetailImage", {
+                                title, detail, img: image1, repast: 1
+                            })}>
                             <Text>Add Detail</Text>
                         </TouchableOpacity>
                     </TouchableOpacity>
@@ -206,7 +210,10 @@ const Home = (props) => {
                         <Image
                             style={styles.img}
                             source={image2 ? { uri: image2 } : require('../../assets/photo.png')} />
-                        <TouchableOpacity style={styles.adddetail} onPress={() => props.navigation.navigate("DetailImage", { title: title, detail: detail })}>
+                        <TouchableOpacity style={styles.adddetail} onPress={() =>
+                            props.navigation.navigate("DetailImage", {
+                                title, detail, img: image2, repast: 2
+                            })}>
                             <Text>Add Detail</Text>
                         </TouchableOpacity>
                     </TouchableOpacity>
@@ -216,7 +223,10 @@ const Home = (props) => {
                         <Image
                             style={styles.img}
                             source={image3 ? { uri: image3 } : require('../../assets/photo.png')} />
-                        <TouchableOpacity style={styles.adddetail} onPress={() => props.navigation.navigate("DetailImage", { title: title, detail: detail })}>
+                        <TouchableOpacity style={styles.adddetail} onPress={() =>
+                            props.navigation.navigate("DetailImage", {
+                                title, detail, img: image3, repast: 3
+                            })}>
                             <Text>Add Detail</Text>
                         </TouchableOpacity>
                     </TouchableOpacity>

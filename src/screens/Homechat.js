@@ -86,6 +86,7 @@ const Homechat = (props) => {
             const chatterid = chatmates[0]
             console.log({ chatterid })
             return <ChatRoom
+              key={chatterid}
               navigation={props.navigation}
               avatar={users[chatterid].image}
               name={users[chatterid].name}
