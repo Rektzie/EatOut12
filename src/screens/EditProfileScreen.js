@@ -15,6 +15,20 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 // height : ""
 
 export default function EditProfileScreen(props) {
+    const [weight, setweight] = useState(true),
+    [height, setheight] = useState(true),      
+    [bmi, setbmi] = useState(0)  ;
+    const calculatebmi = (weight, height) => {
+
+        if (weight > 0 && height > 0) {
+            var finalBmi = weight / (height / 100 * height / 100);
+            setbmi(finalBmi.toFixed(2));
+
+        }
+
+    }
+
+
     const [image, setImage] = useState(null)
     const [userData, setUserData] = useState({
         email: "",
@@ -30,16 +44,30 @@ export default function EditProfileScreen(props) {
 
     const auth = firebase.auth()
     const [uid, setUid] = useState(auth.currentUser.uid)
-    const updateUser = () => {
+    const updateUser = async () => {
+        let task;
+        const photoPath = 'profile/' + uid + '/profile.png'
+        if (Platform.OS === 'ios') {
+            const response = await fetch(image);
+            const blob = await response.blob();
+            task = await firebase.storage().ref(photoPath).put(blob)
+        }
+        else {
+            task = await firebase.storage()
+                .ref(photoPath)
+                .putString(image, 'data_url');
+        }
+        const downloadurl = await firebase.storage().ref(photoPath).getDownloadURL();
 
         const updateDBRef = firebase.firestore().collection('users').doc(uid)
         updateDBRef.set({
             email: userData.email,
             fullName: userData.fullName,
             age: userData.age,
-            BMI: userData.BMI,
-            weight: userData.weight,
-            height: userData.height,
+            BMI: bmi,
+            weight: weight,
+            height: height,
+            imageprofile: downloadurl
         }, { merge: true }).then((docRef) => {
             // setUserData(
             //     {
@@ -80,11 +108,20 @@ export default function EditProfileScreen(props) {
                             BMI: user.BMI,
                             weight: user.weight,
                             height: user.height,
-
-
                         }
-
-
+                    )
+                    setImage(
+                        user.imageprofile
+                    )
+                    setweight(
+                        parseInt(user.weight)
+                    )
+                    setheight(
+                        parseInt(user.height)
+                    )
+                    calculatebmi(
+                        parseInt(user.weight),
+                        parseInt(user.height)
                     )
                 } else {
                     console.log("Document does not exist!");
@@ -93,6 +130,11 @@ export default function EditProfileScreen(props) {
         }
         didMount()
     }, []);
+
+
+
+
+    
 
     const pickImage = async () => {
         let result = await ImagePicker.launchImageLibraryAsync({
@@ -106,10 +148,11 @@ export default function EditProfileScreen(props) {
         if (!result.cancelled) {
             setImage(result.uri)
         }
+
     }
 
     const img = { uri: "https://sv1.picz.in.th/images/2020/11/23/bFYp8t.jpg" };
-
+    console.log({bmi})
     return (
         <ImageBackground style={styles.img}
             source={img} >
@@ -131,16 +174,17 @@ export default function EditProfileScreen(props) {
                             style={styles.imagecolor} >
                             <Image style={styles.imageprofile}
 
-                                source={{
-                                    uri: 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a1/Beauty_girl.jpg/499px-Beauty_girl.jpg',
-                                }}
+                                source={
+                                    image ? { uri: image } : require('../../assets/profile.png')
+
+                                }
                             />
                         </LinearGradient>
                         <View style={{ flexDirection: "row" }}>
                             <MaterialIcons name="edit" size={25} color="gray" style={{ marginRight: 5 }} />
                             <Button
                                 title="Edit Picture"
-                                onPress={() => { props.navigation.navigate("EditProfile") }}
+                                onPress={pickImage}
                             ></Button>
                             {/* <Text style={styles.texteidtprofile}>Edit Profile</Text> */}
 
@@ -159,26 +203,41 @@ export default function EditProfileScreen(props) {
 
                         <View style={{ flexDirection: "row", marginTop: 15, justifyContent: "center" }}>
                             <Text style={styles.nameandemail}>Email</Text>
-                            <TextInput paddingLeft={20} style={styles.inputnameandemail} value={userData.email} onChangeText={text => setUserData({ ...userData, email: text })}></TextInput>
+                            <TextInput paddingLeft={20} style={styles.inputnameandemail} value={userData.email}></TextInput>
 
                         </View>
 
                         <View style={styles.line} />
 
 
-                        <View style={{ flexDirection: "row" , justifyContent:"center"}}>
+                        <View style={{ flexDirection: "row", justifyContent: "center" }}>
                             <Text style={styles.age}>Age</Text>
                             <TextInput paddingLeft={20} style={styles.inputage} value={userData.age} onChangeText={text => setUserData({ ...userData, age: text })}></TextInput>
-                                <Text style={styles.bmi}>BMI</Text>
-                                <TextInput paddingLeft={20} style={styles.inputbmi} value={userData.BMI} onChangeText={text => setUserData({ ...userData, BMI: text })}></TextInput>
+                            <Text style={styles.bmi}>BMI</Text>
+                            <Text paddingLeft={20} style={styles.inputbmi} >{bmi}</Text>
                         </View>
 
-                        <View style={{ flexDirection: "row" , justifyContent:"center"}}>
+                        <View style={{ flexDirection: "row", justifyContent: "center" }}>
                             <Text style={styles.weight}>Weight</Text>
-                            <TextInput paddingLeft={20} style={styles.inputweight} value={userData.weight} onChangeText={text => setUserData({ ...userData, weight: text })}></TextInput>
+                            <TextInput paddingLeft={20} style={styles.inputweight} value={userData.weight.toString()} onChangeText={text => {
+                                setUserData({ ...userData, weight: text })
+                                if(text == ''){
+                                    text = 0
+                                }
+                                setweight(parseInt(text))
+                                calculatebmi(parseInt(text), height)
+                        
+                        }}></TextInput>
 
                             <Text style={styles.height}>Height</Text>
-                            <TextInput paddingLeft={20} style={styles.inputheight} value={userData.height} onChangeText={text => setUserData({ ...userData, height: text })}></TextInput>
+                            <TextInput paddingLeft={20} style={styles.inputheight} value={userData.height.toString()} onChangeText={text => {
+                                setUserData({ ...userData, height: text })
+                                if(text == ''){
+                                    text = 0
+                                }
+                                setheight(parseInt(text))
+                                calculatebmi(weight, parseInt(text))
+                        }}></TextInput>
                         </View>
 
 
@@ -189,21 +248,10 @@ export default function EditProfileScreen(props) {
                                 <Text style={styles.textsave}>Save</Text>
                             </TouchableOpacity>
                         </View>
-                        {/* <View style={{ flexDirection: "row" }}>
-          <Text style={styles.goal}>Goal Reached Streak</Text>
-          <Text editable={false} selectTextOnFocus={false} onEndEditing={false} paddingLeft={20} style={styles.inputgoal}><Text>5สมมติเลข</Text></Text>
-        </View> */}
+                       
                     </View>
 
 
-                    {/* <View style={{ flex: 1 }}>
-                <View style={{ justifyContent: "center", alignItems: "center", flex: 1, marginTop: 20 }}>
-                    <TouchableOpacity style={styles.logoutbutton}>
-                        <Text style={styles.textlogout}>Logout</Text>
-                    </TouchableOpacity>
-                </View>
-            </View> */}
-                    {/* </Image> */}
                 </ScrollView>
             </TouchableWithoutFeedback>
         </ImageBackground>

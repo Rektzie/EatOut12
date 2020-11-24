@@ -29,11 +29,12 @@ const ProfileScreen = (props) => {
   // our state when it changes.
 
   useEffect(() => {
+    
     const subscriber = firebase.firestore()
       .collection('users')
       .doc(uid)
       .onSnapshot(documentSnapshot => {
-        setUserData(documentSnapshot.data());
+        setUserData(prev => ({...documentSnapshot.data()}));
       });
 
     // Stop listening for updates when no longer required
@@ -89,12 +90,6 @@ const ProfileScreen = (props) => {
   // }, [])
   // }
 
-  // const updateDBRef = firebase.firestore().collection('users').doc(uid);
-  // updateDBRef.set({
-  //   height: 157,
-  // })
-
-
   return (
 
     <View >
@@ -112,9 +107,9 @@ const ProfileScreen = (props) => {
             style={styles.imagecolor} >
             <Image style={styles.imageprofile}
 
-              source={{
-                uri: 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a1/Beauty_girl.jpg/499px-Beauty_girl.jpg',
-              }}
+              source={
+                { uri: userData.imageprofile } 
+              }
             />
           </LinearGradient>
           <View style={{ flexDirection: "row", marginTop: 10, marginBottom: 20 }}>
@@ -130,14 +125,14 @@ const ProfileScreen = (props) => {
           <View style={{ flexDirection: "row", justifyContent: "center" }}>
             <MaterialCommunityIcons name="rename-box" size={24} color="gray" style={{ marginLeft: 15, lineHeight: 33 }} />
             <Text style={styles.nameandemail}>Name</Text>
-            <TextInput editable={false} selectTextOnFocus={false} onEndEditing={false} paddingLeft={20} style={styles.inputnameandemail}>
+            <TextInput editable={false} selectTextOnFocus={false} paddingLeft={20} style={styles.inputnameandemail}>
               <Text style={{ color: 'gray' }}>{userData.fullName}</Text></TextInput>
           </View>
 
           <View style={{ flexDirection: "row", marginTop: 15, justifyContent: "center" }}>
             <MaterialCommunityIcons name="email" size={24} color="gray" style={{ marginLeft: 15, lineHeight: 33 }} />
             <Text style={styles.nameandemail}>Email</Text>
-            <TextInput editable={false} selectTextOnFocus={false} onEndEditing={false} paddingLeft={20} style={styles.inputnameandemail}>
+            <TextInput editable={false} selectTextOnFocus={false} paddingLeft={20} style={styles.inputnameandemail}>
               <Text style={{ color: 'gray' }}>{userData.email}</Text></TextInput>
 
           </View>
@@ -148,33 +143,35 @@ const ProfileScreen = (props) => {
           <View style={{ flexDirection: "row", justifyContent: "center" }}>
             <FontAwesome name="birthday-cake" size={24} color="gray" style={{ marginLeft: 55, lineHeight: 65 }} />
             <Text style={styles.age}>Age</Text>
-            <TextInput editable={false} selectTextOnFocus={false} onEndEditing={false} paddingLeft={20} style={styles.inputage}><Text style={{ color: 'gray' }}>{userData.age}</Text></TextInput>
+            <TextInput editable={false} selectTextOnFocus={false} paddingLeft={20} style={styles.inputage}><Text style={{ color: 'gray' }}>{userData.age}</Text></TextInput>
           </View>
           <View style={{ flexDirection: "row", justifyContent: "center" }}>
             <MaterialCommunityIcons name="google-fit" size={24} color="gray" style={{ marginLeft: 8, lineHeight: 65 }} />
             <Text style={styles.bmi}>BMI</Text>
-            <TextInput editable={false} selectTextOnFocus={false} onEndEditing={false} paddingLeft={20} style={styles.inputbmi}><Text style={{ color: 'gray' }}>{userData.BMI}</Text></TextInput>
+            <TextInput editable={false} selectTextOnFocus={false} paddingLeft={20} style={styles.inputbmi}><Text style={{ color: 'gray' }}>{userData.BMI}</Text></TextInput>
             <Ionicons name="ios-body" size={24} color="gray" style={{ marginLeft: 10, lineHeight: 65 }} />
-            <TextInput editable={false} selectTextOnFocus={false} onEndEditing={false} paddingLeft={20} marginLeft={10} style={styles.inputcal}><Text style={{ color: 'gray' }}>สมส่วน</Text></TextInput>
+            <TextInput editable={false} selectTextOnFocus={false} paddingLeft={20} marginLeft={10} style={styles.inputcal}><Text style={{ color: 'gray' }}>
+              {
+                parseInt(userData.BMI) < 18.5 
+                ? 'UnnderWeight' : parseInt(userData.BMI) >= 18.5 && parseInt(userData.BMI) < 25 
+                  ? 'Normal' : parseInt(userData.BMI) >= 25 && parseInt(userData.BMI) < 30 
+                  ? 'OverWeight' : parseInt(userData.BMI) >= 30 && parseInt(userData.BMI) < 35 
+                  ? 'Obese' : parseInt(userData.BMI) >= 35 
+                  ? 'ExtremylyObese' : 'error bmi' 
+              }
+              </Text></TextInput>
           </View>
 
 
           <View style={{ flexDirection: "row", justifyContent: "center" }}>
             <FontAwesome5 name="weight" size={24} color="gray" style={{ lineHeight: 65 }} />
             <Text style={styles.weight}>Weight</Text>
-            <TextInput editable={false} selectTextOnFocus={false} onEndEditing={false} paddingLeft={20} style={styles.inputweight}><Text style={{ color: 'gray' }}>{userData.weight}</Text></TextInput>
+            <TextInput editable={false} selectTextOnFocus={false}  paddingLeft={20} style={styles.inputweight}><Text style={{ color: 'gray' }}>{userData.weight}</Text></TextInput>
             <MaterialCommunityIcons name="human-male-height" size={24} color="gray" style={{ marginLeft: 10, lineHeight: 65 }} />
             <Text style={styles.height}>Height</Text>
-            <TextInput editable={false} selectTextOnFocus={false} onEndEditing={false} paddingLeft={20} style={styles.inputheight}><Text style={{ color: 'gray' }}>{userData.height}</Text></TextInput>
+            <TextInput editable={false} selectTextOnFocus={false}  paddingLeft={20} style={styles.inputheight}><Text style={{ color: 'gray' }}>{userData.height}</Text></TextInput>
           </View>
         </View>
-        {/* <View style={styles.line} /> */}
-
-        {/* <View style={{ flexDirection: "row" }}>
-          <Text style={styles.goal}>Goal Reached Streak</Text>
-          <Text editable={false} selectTextOnFocus={false} onEndEditing={false} paddingLeft={20} style={styles.inputgoal}><Text>5สมมติเลข</Text></Text>
-        </View> */}
-        {/* </View> */}
 
 
         <View style={{ flex: 1 }}>
