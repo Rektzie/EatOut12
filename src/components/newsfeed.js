@@ -81,7 +81,7 @@ const Newsfeed = () => {
     // var imgLunch
     // var imgDinner
     const user = firebase.firestore().collection('users').doc(item.id).get()
-    
+
 
     // const setVar = async () => {
     //   let photoPath1 = item.breakfast_image
@@ -97,29 +97,29 @@ const Newsfeed = () => {
     //   imgDinner = await firebase.storage().ref(photoPath3).getDownloadURL();
 
 
-      // imageRef1
-      //   .getDownloadURL()
-      //   .then((url) => {
-      //     //from url you can fetched the uploaded image easily
-      //     imgBreakfast = url
-      //   })
-      //   // .catch((e) => console.log('getting downloadURL of image error => ', e));
+    // imageRef1
+    //   .getDownloadURL()
+    //   .then((url) => {
+    //     //from url you can fetched the uploaded image easily
+    //     imgBreakfast = url
+    //   })
+    //   // .catch((e) => console.log('getting downloadURL of image error => ', e));
 
-      // imageRef2
-      //   .getDownloadURL()
-      //   .then((url) => {
-      //     //from url you can fetched the uploaded image easily
-      //     imgLunch = url
-      //   })
-      //   // .catch((e) => console.log('getting downloadURL of image error => ', e));
+    // imageRef2
+    //   .getDownloadURL()
+    //   .then((url) => {
+    //     //from url you can fetched the uploaded image easily
+    //     imgLunch = url
+    //   })
+    //   // .catch((e) => console.log('getting downloadURL of image error => ', e));
 
-      // imageRef3
-      //   .getDownloadURL()
-      //   .then((url) => {
-      //     //from url you can fetched the uploaded image easily
-      //     imgDinner = url
-      //   })
-      // .catch((e) => console.log('getting downloadURL of image error => ', e));
+    // imageRef3
+    //   .getDownloadURL()
+    //   .then((url) => {
+    //     //from url you can fetched the uploaded image easily
+    //     imgDinner = url
+    //   })
+    // .catch((e) => console.log('getting downloadURL of image error => ', e));
 
     // }
 
@@ -135,7 +135,7 @@ const Newsfeed = () => {
       <View style={styles.header}>
         <View style={{ backgroundColor: "#9100FF" }}>
           <View style={styles.header}>
-<Text>{user.imageprofile}</Text>
+            <Text>{user.imageprofile}</Text>
             <LinearGradient colors={['#ae1e1e', '#ff005f', '#ffcc00']}
               stops={[0, 35, 100]}
               style={styles.imagecolor} >
