@@ -77,9 +77,10 @@ const DetailImageScreen = (props) => {
 
     async function setFirebaseImageDetails(today, meal, docname, photoPath, title, cal, detail) {
         const meal_images_ref = firebase.firestore().collection('users').doc(userID).collection('meals_history')
+        const uri = await firebase.storage().ref(photoPath).getDownloadURL();
 
         const detailObj = {
-            [meal + '_image']: photoPath,
+            [meal + '_image']: uri,
             [meal + '_title']: title,
             [meal + '_cal']: cal,
             [meal + '_detail']: detail,
