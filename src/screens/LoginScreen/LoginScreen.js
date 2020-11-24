@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Image, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import styles from './styles';
@@ -17,6 +17,14 @@ export default function LoginScreen({ navigation }) {
     const onFooterLinkPress = () => {
         navigation.navigate('Registration')
     }
+
+    useEffect(() => {
+        const auth = firebase.auth()
+        const unsub = auth.onAuthStateChanged(user => {
+            if (user) navigation.replace('Main')
+        })
+        return unsub
+    }, [])
     
     
 
@@ -35,6 +43,7 @@ export default function LoginScreen({ navigation }) {
             .signInWithEmailAndPassword(email, password)
             .then((response) => {
                 const uid = response.user.uid
+                navigation.replace('Main')
                 
                 // usersRef
                 //     .doc(uid)

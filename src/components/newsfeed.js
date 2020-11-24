@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Animated, StyleSheet, Text, View, Easing, Image, ImageBackground, Button } from "react-native";
+import { Animated, StyleSheet, Text, View, Easing, Image, ImageBackground, Button, Alert } from "react-native";
 import { FlatList, ScrollView, TextInput, TouchableOpacity } from "react-native-gesture-handler";
 import { MaterialIcons } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons';
@@ -7,7 +7,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import firebase from 'firebase';
 
 
-const Newsfeed = () => {
+const Newsfeed = (props) => {
 
   // const [snap, setSnap] = useState()
 
@@ -37,24 +37,33 @@ const Newsfeed = () => {
   const [today, setToday] = useState(date + '-' + month + '-' + year)
   const userID = firebase.auth().currentUser.uid
   const [postList, setPostList] = useState([])
+  const [users, setUsers] = useState({})
 
-  const getDailyObject = () => {
-    const firebaseRef = firebase.firestore()
-    const post_list_ref = firebaseRef.collection('post_lists')
+  // const getDailyObject = () => {
+  //   const firebaseRef = firebase.firestore()
+  //   const post_list_ref = firebaseRef.collection('post_lists')
 
-    // const posted = dailyRef.get()
-    post_list_ref.onSnapshot((documentSnapshot) => {
-      // 
-      // console.log(dailyObject)
-      // console.log(dailyObject.posted)
-      let objData = [];
-      documentSnapshot.forEach((doc) => objData.push({ ...doc.data(), id: doc.id }));
-      // console.log({postData})
-      setPostList(objData)
+  //   // const posted = dailyRef.get()
+  //   post_list_ref.onSnapshot((documentSnapshot) => {
+  //     // 
+  //     // console.log(dailyObject)
+  //     // console.log(dailyObject.posted)
+  //     let objData = [];
+  //     const users = {}
+  //     documentSnapshot.forEach(async(doc) => {
+  //       objData.push({ ...doc.data(), id: doc.id })
+  //       users[doc.data().owner] = {}
+  //       const userRef = firebaseRef.collection('users').doc(doc.data().owner)
+  //       const userDocs = await userRef.get()
+  //       users[doc.data().owner] = userDocs.data()
+  //     });
+  //     // console.log({postData})
+  //     setUsers(prev => ({...users}))
+  //     setPostList(prev => ({...objData}))
 
-
-    });
-  }
+      
+  //   });
+  // }
 
 
   useEffect(() => {
@@ -65,74 +74,67 @@ const Newsfeed = () => {
 
     // didMount()
     const db = firebase.firestore().collection('post_lists')
-    const unsubscribe = db.onSnapshot((snapshot) => {
+    const users = {...users}
+    const unsubscribe = db.onSnapshot(async (documentSnapshot) => {
       let postData = [];
-      snapshot.forEach((doc) => postData.push({ ...doc.data(), id: doc.id }));
-
-      setPostList(postData)
+      for (const doc of documentSnapshot.docs) {
+        postData.push({ ...doc.data(), id: doc.id })
+        if (!users[doc.data().owner]) {
+          // get user data if it is not in users
+          // console.log(doc.data().owner)
+          const userRef = firebase.firestore().collection('users').doc(doc.data().owner)
+          const userDocs = await userRef.get()
+          users[doc.data().owner] = userDocs.data()
+        }
+      }
+      // console.log({postData})
+      setUsers(prev => ({...users}))
+      setPostList(prev => ([...postData]))
     })
-    return () => { unsubscribe() }
-  })
+    return () => { unsubscribe && unsubscribe() }
+  }, [users, postList])
 
 
   const renderItem = ({ item }) => {
 
-    // var imgBreakfast
-    // var imgLunch
-    // var imgDinner
-    const user = firebase.firestore().collection('users').doc(item.id).get()
-
-
-    // const setVar = async () => {
-    //   let photoPath1 = item.breakfast_image
-    //   // let imageRef1 = firebase.storage().ref(photoPath1);
-    //   let photoPath2 = item.lunch_image
-    //   // let imageRef2 = firebase.storage().ref(photoPath2);
-    //   let photoPath3 = item.dinner_image
-    //   // let imageRef3 = firebase.storage().ref(photoPath3);
-
-
-    //   imgBreakfast = await firebase.storage().ref(photoPath1).getDownloadURL();
-    //   imgLunch = await firebase.storage().ref(photoPath2).getDownloadURL();
-    //   imgDinner = await firebase.storage().ref(photoPath3).getDownloadURL();
-
-
-    // imageRef1
-    //   .getDownloadURL()
-    //   .then((url) => {
-    //     //from url you can fetched the uploaded image easily
-    //     imgBreakfast = url
-    //   })
-    //   // .catch((e) => console.log('getting downloadURL of image error => ', e));
-
-    // imageRef2
-    //   .getDownloadURL()
-    //   .then((url) => {
-    //     //from url you can fetched the uploaded image easily
-    //     imgLunch = url
-    //   })
-    //   // .catch((e) => console.log('getting downloadURL of image error => ', e));
-
-    // imageRef3
-    //   .getDownloadURL()
-    //   .then((url) => {
-    //     //from url you can fetched the uploaded image easily
-    //     imgDinner = url
-    //   })
-    // .catch((e) => console.log('getting downloadURL of image error => ', e));
-
-    // }
-
-    // setVar()
-
-
-
-
-
-
-
     return (
-      <View style={styles.header}>
+      <ScrollView>
+      <View style={{ backgroundColor: "#9100FF" }}>
+        <View style={styles.header}>
+        <LinearGradient colors={['#ae1e1e', '#ff005f', '#ffcc00']}  
+        stops={[0, 35, 100]}
+        style={styles.imagecolor} >
+          <Image style={styles.imageprofile}
+
+            source={users[item.owner] && users[item.owner].imageprofile  ? {uri: users[item.owner].imageprofile} : require('../../assets/profile.png')}
+          />
+          </LinearGradient>
+          <Text style={styles.headertextname}>
+            {users[item.owner].fullName}
+        </Text>
+          <TouchableOpacity onPress={() => {
+            const user = firebase.auth().currentUser
+            const room_user = [user.uid, item.owner].sort().join('_')
+            Alert.alert("Go to Chat with " + users[item.owner].fullName, "Do you want to enter chat room ?", [
+              {
+                text: "Cancel",
+                onPress: () => console.log("Cancel Pressed"),
+                style: "cancel"
+              },
+              { text: "Yes", onPress: () => props.navigation.navigate('Chat', {roomname: room_user}) }
+            ],
+            { cancelable: false }
+          )
+          }} style={{ flexDirection: "row", marginLeft: 15 }}>
+            <AntDesign name="wechat" size={40} color="#B0CDF6" />
+          </TouchableOpacity>
+        
+        </View>
+      </View>
+
+{/* 
+
+
         <View style={{ backgroundColor: "#9100FF" }}>
           <View style={styles.header}>
             <Text>{user.imageprofile}</Text>
@@ -141,28 +143,25 @@ const Newsfeed = () => {
               style={styles.imagecolor} >
               <Image style={styles.imageprofile}
 
-                source={{
-                  uri: 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a1/Beauty_girl.jpg/499px-Beauty_girl.jpg',
-                }}
+                source={
+                  { uri: item.imageprofile }
+                }
               />
             </LinearGradient>
-            {/* <Button
-            title="test"
-            onPress={() => Test()}
-          >
-          </Button> */}
+
+          </View>
             <Text style={styles.headertextname}>
-              Ploy.sucha
+            Ploy.sucha
         </Text>
             <View style={{ flexDirection: "row", marginLeft: 15 }}>
               <AntDesign name="wechat" size={40} color="#B0CDF6" />
             </View>
 
-          </View>
-        </View>
+          </View> */}
+        
         <View style={{ flexDirection: "column" }}>
           <View style={{ flexDirection: "row", margin: 10 }}>
-            <Text style={styles.headershared}>Ploy.sucha Shared Total Ate 1020 Kcal</Text>
+          <Text style={styles.headershared}>{users[item.owner].fullName} Shared Ate</Text>
           </View>
           <View style={styles.containerate}>
             <Text style={styles.breakfast}>Breakfast</Text>
@@ -189,14 +188,14 @@ const Newsfeed = () => {
           </View>
 
           <View style={styles.containerkcal}>
-            <TextInput style={styles.inputkcal}>
-              <Text style={styles.textkcal}>{item.breakfast_cal}</Text>
+            <TextInput editable={false} selectTextOnFocus={false} style={styles.inputkcal}>
+              <Text style={styles.textkcal}>{item.breakfast_cal} Kcal</Text>
             </TextInput>
-            <TextInput style={styles.inputkcal}>
-              <Text style={styles.textkcal}>{item.lunch_cal}</Text>
+            <TextInput editable={false} selectTextOnFocus={false} style={styles.inputkcal}>
+              <Text style={styles.textkcal}>{item.lunch_cal} Kcal</Text>
             </TextInput>
-            <TextInput style={styles.inputkcal}>
-              <Text style={styles.textkcal}>{item.dinner_cal}</Text>
+            <TextInput editable={false} selectTextOnFocus={false} style={styles.inputkcal}>
+              <Text style={styles.textkcal}>{item.dinner_cal} Kcal</Text>
             </TextInput>
           </View>
 
@@ -204,16 +203,17 @@ const Newsfeed = () => {
         </View>
 
         <View style={styles.line} />
-      </View>
+
+      </ScrollView>
     )
 
   }
 
 
-
+  // console.log({ users })
 
   return (
-    <ScrollView>
+
       <FlatList
         data={postList}
         renderItem={renderItem}
@@ -221,8 +221,6 @@ const Newsfeed = () => {
       />
 
 
-
-    </ScrollView>
 
 
   );

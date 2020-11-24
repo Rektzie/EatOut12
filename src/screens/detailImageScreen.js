@@ -25,9 +25,10 @@ import Fire from '../../Fire'
 const DetailImageScreen = (props) => {
     // const [ imageName, setImageName ] = useState('')
     // const [ uploadUri, setUploadUri ] = useState('')
-    const img = props.navigation.getParam("img")
-    const repast = props.navigation.getParam("repast")
-    const meal = props.navigation.getParam("meal")
+    const img = props.route.params.img
+    console.log({img})
+    const repast = props.route.params.repast
+    const meal = props.route.params.meal
     // const gettitle = props.navigation.getParam("title")
     // const getdetail = props.navigation.getParam("detail")
 
@@ -47,7 +48,8 @@ const DetailImageScreen = (props) => {
     var date = new Date().getDate();
     var month = new Date().getMonth() + 1; //To get the Current Month
     var year = new Date().getFullYear(); //To get the Current Year
-    const [today, setToday] = useState(date + '-' + month + '-' + year)
+    const auth = firebase.auth()
+    const [today, setToday] = useState(auth.currentUser.uid + '-' + date + '-' + month + '-' + year)
     const [userID, setUserID] = useState(Fire.uid)
 
     useEffect(() => {

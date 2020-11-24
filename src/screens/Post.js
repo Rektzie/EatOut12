@@ -3,7 +3,7 @@ import { Animated, StyleSheet, Text, View, Button, Easing, Image } from "react-n
 import Newsfeed from "../components/newsfeed";
 import firebase from 'firebase';
 
-const Post = () => {
+const Post = (props) => {
 
   const [uid, setUid] = useState('')
     useEffect( () => {
@@ -12,9 +12,8 @@ const Post = () => {
     },[])
  
   return (
-    <View style={styles.layout}>
-      < Newsfeed />
-    </View>
+    < Newsfeed navigation={props.navigation} / >
+     
    
   );
 };

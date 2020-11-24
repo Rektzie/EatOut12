@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Animated, StyleSheet, Text, View, Image, Button, Platform, Keyboard, TouchableWithoutFeedback, TouchableOpacityBase, ImageBackground } from "react-native";
+import { Animated, StyleSheet, Text, View, Image, Button, Platform, Keyboard, TouchableWithoutFeedback, TouchableOpacityBase, ImageBackground, ActivityIndicator } from "react-native";
 import { ScrollView, TextInput, TouchableOpacity } from "react-native-gesture-handler";
 import { MaterialIcons } from '@expo/vector-icons';
 import firebase from 'firebase'
@@ -17,7 +17,9 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 export default function EditProfileScreen(props) {
     const [weight, setweight] = useState(true),
     [height, setheight] = useState(true),      
-    [bmi, setbmi] = useState(0)  ;
+    [bmi, setbmi] = useState(0),
+    [isLoading, setIsLoading] = useState(false)
+    
     const calculatebmi = (weight, height) => {
 
         if (weight > 0 && height > 0) {
@@ -30,6 +32,7 @@ export default function EditProfileScreen(props) {
 
 
     const [image, setImage] = useState(null)
+    const [isImageUpload, setIsImageUpload] = useState(false)
     const [userData, setUserData] = useState({
         email: "",
         fullName: "",
@@ -45,29 +48,37 @@ export default function EditProfileScreen(props) {
     const auth = firebase.auth()
     const [uid, setUid] = useState(auth.currentUser.uid)
     const updateUser = async () => {
-        let task;
+        setIsLoading(true)
         const photoPath = 'profile/' + uid + '/profile.png'
-        if (Platform.OS === 'ios') {
-            const response = await fetch(image);
-            const blob = await response.blob();
-            task = await firebase.storage().ref(photoPath).put(blob)
+        let downloadurl
+        if (image && isImageUpload) {
+            if (Platform.OS === 'ios') {
+                const response = await fetch(image);
+                const blob = await response.blob();
+                await firebase.storage().ref(photoPath).put(blob)
+            }
+            else {
+                firebase.storage()
+                    .ref(photoPath)
+                    .putString(image, 'data_url');
+            }
+            downloadurl = await firebase.storage().ref(photoPath).getDownloadURL();
         }
-        else {
-            task = await firebase.storage()
-                .ref(photoPath)
-                .putString(image, 'data_url');
+
+        if (downloadurl) {
+            await updateDBRef.set({
+                imageprofile: downloadurl
+            }, {merge: true})
         }
-        const downloadurl = await firebase.storage().ref(photoPath).getDownloadURL();
 
         const updateDBRef = firebase.firestore().collection('users').doc(uid)
-        updateDBRef.set({
+        await updateDBRef.set({
             email: userData.email,
             fullName: userData.fullName,
             age: userData.age,
             BMI: bmi,
             weight: weight,
             height: height,
-            imageprofile: downloadurl
         }, { merge: true }).then((docRef) => {
             // setUserData(
             //     {
@@ -79,11 +90,12 @@ export default function EditProfileScreen(props) {
             //         weight: user.weight,
             //         height: user.height,
             //     })
+            setIsLoading(false)
             props.navigation.popToTop();
         })
             .catch((error) => {
                 console.error("Error: ", error);
-
+                setIsLoading(false)
             });
     };
 
@@ -147,8 +159,11 @@ export default function EditProfileScreen(props) {
 
         if (!result.cancelled) {
             setImage(result.uri)
+            setIsImageUpload(true)
+        } else {
+            setImage(null)
+            setIsImageUpload(false)
         }
-
     }
 
     const img = { uri: "https://sv1.picz.in.th/images/2020/11/23/bFYp8t.jpg" };
@@ -242,10 +257,13 @@ export default function EditProfileScreen(props) {
 
 
                         <View style={{ flex: 1 }}>
-                            <TouchableOpacity style={styles.savebutton}
+                            <TouchableOpacity disabled={isLoading} style={styles.savebutton}
                                 onPress={() => updateUser()}
                             >
-                                <Text style={styles.textsave}>Save</Text>
+                                {
+                                    isLoading ? <ActivityIndicator />
+                                    :   <Text style={styles.textsave}>Save</Text>
+                                }
                             </TouchableOpacity>
                         </View>
                        

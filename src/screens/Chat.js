@@ -22,7 +22,7 @@ export default class Chat extends React.Component  {
 
   componentDidMount(){
     const user = firebase.auth().currentUser
-    const roomname = this.props.navigation.getParam('roomname')
+    const roomname = this.props.route.params.roomname
     Fire.setDB = roomname
     Fire.get(message => this.setState(previous => ({
       message: GiftedChat.append(previous.message,  message)

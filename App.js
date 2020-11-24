@@ -27,36 +27,6 @@ const Stack = createStackNavigator();
 
 export default function App() {
 
-  const [loading, setLoading] = useState(true)
-  const [user, setUser] = useState(null)
-
-  useEffect(() => {
-    const usersRef = firebase.firestore().collection('users');
-    firebase.auth().onAuthStateChanged(user => {
-      if (user) {
-        usersRef
-          .doc(user.uid)
-          .get()
-          .then((document) => {
-            const userData = document.data()
-            setLoading(false)
-            setUser(userData)
-          })
-          .catch((error) => {
-            setLoading(false)
-          });
-      } else {
-        setLoading(false)
-      }
-    });
-  }, []);
-
-  if (loading) {
-    return (
-      <></>
-    )
-  }
-
   return (
     // <NavigationContainer>
     //   <Stack.Navigator>
@@ -75,17 +45,11 @@ export default function App() {
 
     // <Provider store={store}>
     <NavigationContainer>
-      {user ? (
-        <RootNav props={user}></RootNav>
-      ) : (
-          <Stack.Navigator>
-            <>
-              <Stack.Screen name="Login" component={LoginScreen} />
-              <Stack.Screen name="Registration" component={RegistrationScreen} />
-            </>
-
-          </Stack.Navigator>
-        )}
+      <Stack.Navigator initialRouteName="Login" headerMode="none">
+        <Stack.Screen name="Login" component={LoginScreen} />
+        <Stack.Screen name="Registration" component={RegistrationScreen} />
+        <Stack.Screen name="Main" component={RootNav} />
+      </Stack.Navigator>
     </NavigationContainer>
     // </Provider>
 

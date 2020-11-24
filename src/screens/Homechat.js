@@ -14,9 +14,9 @@ const ChatRoom = (props) => {
         style={styles.imagecolor} >
           <Image style={styles.imageprofile}
 
-            source={{
+            source={props.avatar ? {
               uri: props.avatar,
-            }}
+            } : require('../../assets/profile.png')}
           />
           </LinearGradient>
           <Text style={styles.titlename}>{props.name}</Text>
@@ -61,16 +61,17 @@ const Homechat = (props) => {
 
             userstmp[u] = {
               name: userDoc.data().fullName,
-              image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a1/Beauty_girl.jpg/499px-Beauty_girl.jpg'
+              image: userDoc.data().imageprofile
             }
           }
         }
         rooms[name] = data[name][Object.keys(data[name])[0]]
       }
-      console.log(userstmp)
+      console.log({ userstmp })
       console.log(rooms)
-      setUsers(userstmp)
-      setRooms(rooms)
+      console.log({userstmp})
+      setUsers(prev => ({...userstmp}))
+      setRooms(prev => ({...rooms}))
     });
     
   }, [])
@@ -81,18 +82,24 @@ const Homechat = (props) => {
         
         {
           Object.keys(rooms).map(roomname => {
-            const chatmates = roomname.split('_')
-            chatmates.slice(chatmates.indexOf(user.uid), 1)[0]
+            let chatmates = roomname.split('_')
+            console.log(chatmates, 'chat mates')
+            console.log(chatmates.indexOf(user.uid))
+            chatmates.splice(chatmates.indexOf(user.uid), 1)[0] 
+            console.log(chatmates)
             const chatterid = chatmates[0]
-            console.log({ chatterid })
-            return <ChatRoom
-              key={chatterid}
-              navigation={props.navigation}
-              avatar={users[chatterid].image}
-              name={users[chatterid].name}
-              msg={rooms[roomname].text}
-              roomname={roomname}
+            if (!chatterid && !users[chatterid]) return <Text>Loading</Text>
+            console.log(users[chatterid] , 'in render')
+            return (
+              <ChatRoom
+                key={chatterid}
+                navigation={props.navigation}
+                avatar={users[chatterid].image}
+                name={users[chatterid].name}
+                msg={rooms[roomname].text}
+                roomname={roomname}
               />
+            )
           })
         }
       

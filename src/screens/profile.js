@@ -29,6 +29,10 @@ const ProfileScreen = (props) => {
   // our state when it changes.
 
   useEffect(() => {
+    const auth = firebase.auth()
+    const unsub = auth.onAuthStateChanged(user => {
+      if (!user) props.navigation.navigate('Login')
+    })
     
     const subscriber = firebase.firestore()
       .collection('users')
@@ -108,7 +112,8 @@ const ProfileScreen = (props) => {
             <Image style={styles.imageprofile}
 
               source={
-                { uri: userData.imageprofile } 
+                userData.imageprofile ?
+                { uri: userData.imageprofile} : require('../../assets/profile.png') 
               }
             />
           </LinearGradient>
