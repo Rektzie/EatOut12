@@ -166,16 +166,14 @@ export default function EditProfileScreen(props) {
                         <View style={styles.line} />
 
 
-                        <View style={{ flexDirection: "row" }}>
+                        <View style={{ flexDirection: "row" , justifyContent:"center"}}>
                             <Text style={styles.age}>Age</Text>
                             <TextInput paddingLeft={20} style={styles.inputage} value={userData.age} onChangeText={text => setUserData({ ...userData, age: text })}></TextInput>
-                            <View style={{ flexDirection: "row" }}>
                                 <Text style={styles.bmi}>BMI</Text>
                                 <TextInput paddingLeft={20} style={styles.inputbmi} value={userData.BMI} onChangeText={text => setUserData({ ...userData, BMI: text })}></TextInput>
-                            </View>
                         </View>
 
-                        <View style={{ flexDirection: "row" }}>
+                        <View style={{ flexDirection: "row" , justifyContent:"center"}}>
                             <Text style={styles.weight}>Weight</Text>
                             <TextInput paddingLeft={20} style={styles.inputweight} value={userData.weight} onChangeText={text => setUserData({ ...userData, weight: text })}></TextInput>
 
@@ -281,7 +279,7 @@ const styles = StyleSheet.create({
     inputbmi: {
         marginLeft: 20,
         marginTop: 20,
-        width: "42%",
+        width: "25%",
         height: 30,
         borderWidth: 0.5,
         borderColor: "#3186FF",

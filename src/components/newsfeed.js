@@ -4,7 +4,7 @@ import { ScrollView, TextInput, TouchableOpacity } from "react-native-gesture-ha
 import { MaterialIcons } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
-// import firebase from 'firebase'
+import firebase from 'firebase';
 
 const Newsfeed = () => {
 
@@ -49,11 +49,11 @@ const Newsfeed = () => {
               }}
             />
           </LinearGradient>
-          <Button
+          {/* <Button
             title="test"
             onPress={() => Test()}
           >
-          </Button>
+          </Button> */}
           <Text style={styles.headertextname}>
             Ploy.sucha
         </Text>
