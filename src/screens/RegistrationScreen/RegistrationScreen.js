@@ -13,6 +13,7 @@ export default function RegistrationScreen({ navigation }) {
     const onFooterLinkPress = () => {
         navigation.navigate('Login')
     }
+    
 
     const onRegisterPress = () => {
         if (password !== confirmPassword) {
@@ -22,7 +23,7 @@ export default function RegistrationScreen({ navigation }) {
         firebase
             .auth()
             .createUserWithEmailAndPassword(email, password)
-            .then((response) => {
+            .then(async (response) => {
                 const uid = response.user.uid
                 const data = {
                     id: uid,
@@ -34,15 +35,10 @@ export default function RegistrationScreen({ navigation }) {
                     height : ""
                 };
                 const usersRef = firebase.firestore().collection('users')
-                usersRef
+                await usersRef
                     .doc(uid)
                     .set(data)
-                    .then(() => {
-                        navigation.replace('Main', { user: data })
-                    })
-                    .catch((error) => {
-                        alert(error)
-                    });
+                // navigation.replace('Main')
             })
             .catch((error) => {
                 alert(error)
