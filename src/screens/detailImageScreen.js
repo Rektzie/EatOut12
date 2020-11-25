@@ -12,7 +12,7 @@ import {
     Keyboard,
     TouchableWithoutFeedback,
     TouchableOpacityBase,
-    ScrollView
+    ActivityIndicator
 } from 'react-native';
 import { useEffect, useState } from 'react';
 import firebase from 'firebase'
@@ -49,7 +49,7 @@ const DetailImageScreen = (props) => {
     var month = new Date().getMonth() + 1; //To get the Current Month
     var year = new Date().getFullYear(); //To get the Current Year
     const auth = firebase.auth()
-    const [today, setToday] = useState(auth.currentUser.uid + '-' + date + '-' + month + '-' + year)
+    const [today, setToday] = useState(date + '-' + month + '-' + year)
     const [userID, setUserID] = useState(Fire.uid)
 
     useEffect(() => {
@@ -82,10 +82,10 @@ const DetailImageScreen = (props) => {
         const uri = await firebase.storage().ref(photoPath).getDownloadURL();
 
         const detailObj = {
-            [meal + '_image']: uri,
-            [meal + '_title']: title,
-            [meal + '_cal']: cal,
-            [meal + '_detail']: detail,
+            [meal + '_image']: uri? uri : "",
+            [meal + '_title']: title? title: "",
+            [meal + '_cal']: cal? cal: "",
+            [meal + '_detail']: detail? detail: "",
             posted: false
         }
         await meal_images_ref.doc(today).set(detailObj, { merge: true })
@@ -133,7 +133,6 @@ const DetailImageScreen = (props) => {
         <TouchableWithoutFeedback onPress={() => {
             Keyboard.dismiss();
         }}>
-            <ScrollView>
             <View style={styles.container}>
                 <View style={styles.containerall}>
                     < Image
@@ -178,7 +177,6 @@ const DetailImageScreen = (props) => {
                     </TouchableOpacity>
                 </View>
             </View>
-            </ScrollView>
         </TouchableWithoutFeedback>
         //          <Button
         //     title="save"
