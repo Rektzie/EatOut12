@@ -31,7 +31,7 @@ const ProfileScreen = (props) => {
   useEffect(() => {
     const auth = firebase.auth()
     const unsub = auth.onAuthStateChanged(user => {
-      if (!user) props.navigation.replaceAll('Login')
+      if (!user) props.navigation.replace('Login')
     })
     
     const subscriber = firebase.firestore()
