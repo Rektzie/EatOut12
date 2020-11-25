@@ -9,7 +9,7 @@ import { FontAwesome, FontAwesome5 } from '@expo/vector-icons';
 import { Ionicons } from '@expo/vector-icons';
 
 const onSignOutButtonPressed = () => {
-  // firebase.auth().signOut().then(function () 
+  // firebase.auth().signOut().then(function () {
   // Sign-out successful.
   firebase.auth()
     .signOut()
@@ -96,11 +96,11 @@ const ProfileScreen = (props) => {
 
   return (
 
-  
+    <View >
       <LinearGradient colors={['#ffd555', '#fcd190', '#f9ea96']}
         stops={[0, 48, 100]}
         style={styles.bgcolor} >
-  <ScrollView>
+
         <View style={styles.containerprofileimageandedit}>
 
 
@@ -187,9 +187,8 @@ const ProfileScreen = (props) => {
             </TouchableOpacity>
           </View>
         </View>
-        </ScrollView>
       </LinearGradient>
-    
+    </View>
 
   );
 };
