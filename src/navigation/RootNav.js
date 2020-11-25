@@ -23,7 +23,11 @@ const HomeStack = () => {
             backgroundColor: '#FDD37A'
           }
         }} />
-        <Stack.Screen name="DetailImage" component={DetailImageScreen} />
+        <Stack.Screen name="DetailImage" component={DetailImageScreen} options={{
+          headerStyle: {
+            backgroundColor: '#FDD37A'
+          }
+        }}/>
       </Stack.Navigator>
   )
 }
@@ -44,7 +48,11 @@ const newsFeedStack = () => {
 const ChatStack = () => {
   return (
     <Stack.Navigator>
-        <Stack.Screen name="HomeChat" component={Homechat} />
+        <Stack.Screen name="HistoryChat" component={Homechat} options={{
+          headerStyle: {
+            backgroundColor: '#FDD37A'
+          }
+        }}/>
         <Stack.Screen name="Chat" component={Chat} />
     </Stack.Navigator>
   )
@@ -52,8 +60,22 @@ const ChatStack = () => {
 
 const ProfileStack = () => {
     return <Stack.Navigator>
-        <Stack.Screen name="Profile" component={Profile} />
-        <Stack.Screen name="EditProfile" component={EditProfileScreen} />
+        <Stack.Screen name="Profile" component={Profile} options={{
+          headerStyle: {
+            backgroundColor: '#F23939',
+          },
+          headerTitleStyle: {
+            color: 'white'
+          }
+        }}/>
+        <Stack.Screen name="EditProfile" component={EditProfileScreen} options={{
+          headerStyle: {
+            backgroundColor: '#F23939',
+          },
+          headerTitleStyle: {
+            color: 'white'
+          }
+        }}/>
     </Stack.Navigator>
 }
 
