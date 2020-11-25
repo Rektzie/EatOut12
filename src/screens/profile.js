@@ -180,7 +180,7 @@ const ProfileScreen = (props) => {
 
 
         <View style={{ flex: 1 }}>
-          <View style={{ justifyContent: "center", alignItems: "center", marginTop: 120 }}>
+          <View style={{ justifyContent: "center", alignItems: "center", marginTop: 15 }}>
 
             <TouchableOpacity onPress={onSignOutButtonPressed} style={styles.logoutbutton}>
               <Text style={styles.textlogout}>Logout</Text>

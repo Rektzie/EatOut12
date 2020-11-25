@@ -20,7 +20,7 @@ StatusBar.setHidden(false, 'slide');
 const HomeStack = () => {
   return (
     <Stack.Navigator initialRouteName="Home">
-        <Stack.Screen name="Home" component={Home} options={{
+        <Stack.Screen name="Eatout" component={Home} options={{
           headerStyle: {
             backgroundColor: '#FDD37A'
           }

@@ -349,7 +349,7 @@ const styles = StyleSheet.create({
         flex: 1,
         alignItems: "center",
         justifyContent: "center",
-        backgroundColor: "#CECDBC",
+        backgroundColor: "#f1d69d",
     },
     adddetail: {
         height: 50,
