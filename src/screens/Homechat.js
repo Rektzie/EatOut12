@@ -23,7 +23,7 @@ const ChatRoom = (props) => {
 
           </View>
         <View style={styles.containertext} onPress={() => props.navigation.navigate("Chat")}>
-        <Text style={styles.text} onPress={() => props.navigation.navigate("Chat")}>{props.msg}</Text>
+        <Text style={styles.text} onPress={() => props.navigation.navigate("Chat", {roomname: props.roomname})}>{props.msg}</Text>
         <AntDesign name="right" size={24} color="black" style={styles.icon} onPress={() => props.navigation.navigate("Chat", {roomname: props.roomname})}/>
         </View>
         <View style={styles.line} />

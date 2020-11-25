@@ -7,6 +7,7 @@ import Homechat from "../screens/Homechat"
 import Post from "../screens/Post";
 import { AntDesign } from "@expo/vector-icons";
 import React from "react";
+import {StatusBar} from 'react-native';
 // import { createStackNavigator } from "react-navigation-stack"
 import DetailImageScreen from "../screens/detailImageScreen"
 import Profile from "../screens/profile"
@@ -14,6 +15,7 @@ import EditProfileScreen from "../screens/EditProfileScreen"
 import { Entypo , MaterialCommunityIcons} from '@expo/vector-icons'; 
 
 const Stack = createStackNavigator()
+StatusBar.setHidden(false, 'slide');
 
 const HomeStack = () => {
   return (
