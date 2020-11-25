@@ -162,7 +162,7 @@ const ProfileScreen = (props) => {
                   ? 'Normal' : parseInt(userData.BMI) >= 25 && parseInt(userData.BMI) < 30 
                   ? 'OverWeight' : parseInt(userData.BMI) >= 30 && parseInt(userData.BMI) < 35 
                   ? 'Obese' : parseInt(userData.BMI) >= 35 
-                  ? 'ExtremylyObese' : 'error bmi' 
+                  ? 'Extremely Obese' : 'error bmi' 
               }
               </Text></TextInput>
           </View>
