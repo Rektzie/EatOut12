@@ -55,7 +55,7 @@ const Home = (props) => {
             if (Platform.OS !== 'web') {
                 const { status } = await ImagePicker.requestCameraRollPermissionsAsync();
                 if (status !== 'granted') {
-                    alert('Sorry');
+                    alert('Sorry, Please allow access to photo library');
                 }
             }
             getImageFromFirebase(setImage1, 'breakfast')
