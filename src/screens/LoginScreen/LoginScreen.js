@@ -11,6 +11,7 @@ import { firebase } from '../../firebase/config'
 export default function LoginScreen({ navigation }) {
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
+    const [listener, setListener] = useState(null)
     // const dispatch = useDispatch()
     // const selecttor = useSelector
 
@@ -21,9 +22,12 @@ export default function LoginScreen({ navigation }) {
     useEffect(() => {
         const auth = firebase.auth()
         const unsub = auth.onAuthStateChanged(user => {
-            if (user) navigation.replace('Main')
+            if (user) navigation.reset({
+              index: 0,
+              routes: [{ name: 'Main' }],
+            })
         })
-        return unsub
+        return () => {unsub && unsub()}
     }, [])
     
     
