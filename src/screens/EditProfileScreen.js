@@ -16,10 +16,10 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 export default function EditProfileScreen(props) {
     const [weight, setweight] = useState(true),
-    [height, setheight] = useState(true),      
-    [bmi, setbmi] = useState(0),
-    [isLoading, setIsLoading] = useState(false)
-    
+        [height, setheight] = useState(true),
+        [bmi, setbmi] = useState(0),
+        [isLoading, setIsLoading] = useState(false)
+
     const calculatebmi = (weight, height) => {
 
         if (weight > 0 && height > 0) {
@@ -68,7 +68,7 @@ export default function EditProfileScreen(props) {
         if (downloadurl) {
             await updateDBRef.set({
                 imageprofile: downloadurl
-            }, {merge: true})
+            }, { merge: true })
         }
 
         const updateDBRef = firebase.firestore().collection('users').doc(uid)
@@ -146,7 +146,7 @@ export default function EditProfileScreen(props) {
 
 
 
-    
+
 
     const pickImage = async () => {
         let result = await ImagePicker.launchImageLibraryAsync({
@@ -167,7 +167,7 @@ export default function EditProfileScreen(props) {
     }
 
     const img = { uri: "https://sv1.picz.in.th/images/2020/11/23/bFYp8t.jpg" };
-    console.log({bmi})
+    console.log({ bmi })
     return (
         <ImageBackground style={styles.img}
             source={img} >
@@ -236,23 +236,23 @@ export default function EditProfileScreen(props) {
                             <Text style={styles.weight}>Weight</Text>
                             <TextInput paddingLeft={20} style={styles.inputweight} value={userData.weight.toString()} onChangeText={text => {
                                 setUserData({ ...userData, weight: text })
-                                if(text == ''){
+                                if (text == '') {
                                     text = 0
                                 }
                                 setweight(parseInt(text))
                                 calculatebmi(parseInt(text), height)
-                        
-                        }}></TextInput>
+
+                            }}></TextInput>
 
                             <Text style={styles.height}>Height</Text>
                             <TextInput paddingLeft={20} style={styles.inputheight} value={userData.height.toString()} onChangeText={text => {
                                 setUserData({ ...userData, height: text })
-                                if(text == ''){
+                                if (text == '') {
                                     text = 0
                                 }
                                 setheight(parseInt(text))
                                 calculatebmi(weight, parseInt(text))
-                        }}></TextInput>
+                            }}></TextInput>
                         </View>
 
 
@@ -262,11 +262,11 @@ export default function EditProfileScreen(props) {
                             >
                                 {
                                     isLoading ? <ActivityIndicator />
-                                    :   <Text style={styles.textsave}>Save</Text>
+                                        : <Text style={styles.textsave}>Save</Text>
                                 }
                             </TouchableOpacity>
                         </View>
-                       
+
                     </View>
 
 
