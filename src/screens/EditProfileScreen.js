@@ -44,10 +44,11 @@ export default function EditProfileScreen(props) {
 
     })
 
-
+    
     const auth = firebase.auth()
     const [uid, setUid] = useState(auth.currentUser.uid)
     const updateUser = async () => {
+        const updateDBRef = firebase.firestore().collection('users').doc(uid)
         setIsLoading(true)
         const photoPath = 'profile/' + uid + '/profile.png'
         let downloadurl
@@ -62,7 +63,7 @@ export default function EditProfileScreen(props) {
                     .ref(photoPath)
                     .putString(image, 'data_url');
             }
-            downloadurl = await firebase.storage().ref(photoPath).getDownloadURL();
+            downloadurl = await firebase.storage().ref().child(photoPath).getDownloadURL();
         }
 
         if (downloadurl) {
@@ -71,7 +72,6 @@ export default function EditProfileScreen(props) {
             }, { merge: true })
         }
 
-        const updateDBRef = firebase.firestore().collection('users').doc(uid)
         await updateDBRef.set({
             email: userData.email,
             fullName: userData.fullName,
